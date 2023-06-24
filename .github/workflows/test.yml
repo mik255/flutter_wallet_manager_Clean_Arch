@@ -1,25 +1,53 @@
-name: Testes
+name: Testes, Build APK e Criar Release
 
 on:
   push:
     branches:
-      - develop  # substitua "main" pelo nome da sua branch principal
+      - develop
+      - master
   pull_request:
     branches:
-      - develop  # substitua "main" pelo nome da sua branch principal
+      - develop
+      - master
 
 jobs:
-  test:
+#  test_and_build:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout do código
+#        uses: actions/checkout@v2
+#
+#      - name: Configurar ambiente Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.10.4'
+#
+#      - name: Executar testes
+#        run: flutter test
+
+  create_release:
+#    needs: test_and_build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Configurar ambiente
+      - name: Checkout do código
         uses: actions/checkout@v2
 
-      - name: Configurar ambiente Flutter
-        uses: subosito/flutter-action@v2
+      - name: Criar Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          flutter-version: '3.10.4'
+          tag_name: v1.0.0  # substitua pela tag/version desejada
+          release_name: Release v1.0.0  # substitua pelo nome do lançamento desejado
+          draft: false
+          prerelease: false
 
-      - name: Executar testes
-        run: flutter test
+      - name: Fazer upload do APK
+        id: upload_apk
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk

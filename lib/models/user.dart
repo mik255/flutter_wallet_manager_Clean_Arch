@@ -50,14 +50,14 @@ class User {
   }
 
   bool validateEmail() {
-    RegExp emailRegex = RegExp(
-        r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$');
-    return emailRegex.hasMatch(email);
+    final emailRegex = RegExp(
+        r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)*(\.[a-zA-Z]{2,})$');
+    return emailRegex.hasMatch(email.trim());
   }
 
   bool validatePassword() {
-    RegExp passwordRegex =
-        RegExp(r' ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$');
-    return passwordRegex.hasMatch(password);
+    final passwordRegex = RegExp(
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+    return passwordRegex.hasMatch(password.trim());
   }
 }
