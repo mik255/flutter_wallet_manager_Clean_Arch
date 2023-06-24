@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet_manager/controller/login_controller.dart';
 import 'package:wallet_manager/data/preferences_helper.dart';
 import 'package:wallet_manager/shared/mainStances.dart';
-
 import '../../models/user.dart';
 
 class LoginPage extends StatelessWidget {
@@ -17,13 +15,14 @@ class LoginPage extends StatelessWidget {
     SharedPreferencesHelper helper = SharedPreferencesHelper(
       MainStances.preferences,
     );
-    var user =  User(
+    var user = User(
       email: emailController.text,
       password: passwordController.text,
     );
     LoginController controller = LoginController(
-        user: user,
-        helper: helper);
+      user: user,
+      helper: helper,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
@@ -41,7 +40,7 @@ class LoginPage extends StatelessWidget {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  if(!user.validateEmail()){
+                  if (!user.validateEmail()) {
                     return 'Email is not valid';
                   }
                   return null;
@@ -57,20 +56,27 @@ class LoginPage extends StatelessWidget {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  if(user.validatePassword()){
+                  if (user.validatePassword()) {
                     return 'password is not valid';
                   }
                   return null;
                 },
                 obscureText: true,
                 decoration: const InputDecoration(
-                  labelText: 'Senha',
+                  labelText: 'Password',
                 ),
               ),
               const SizedBox(height: 16.0),
+              AnimatedBuilder(
+                  animation: controller.message,
+                  builder: (context, child) {
+                    return Text(
+                      controller.message.value,
+                    );
+                  }),
               ElevatedButton(
                 onPressed: controller.login,
-                child: const Text('Entrar'),
+                child: const Text('Enter'),
               ),
             ],
           ),

@@ -8,6 +8,7 @@ import '../models/user.dart';
 class LoginController {
   User user;
   IPreferencesHelper helper;
+  ValueNotifier<String> message = ValueNotifier('');
   var formKey = GlobalKey<FormState>();
   LoginController({
     required this.user,
@@ -15,6 +16,7 @@ class LoginController {
   });
 
   login() async{
+    message.value = '';
     if(!formKey.currentState!.validate()){
       return;
     }
@@ -27,6 +29,7 @@ class LoginController {
         }
       }
     }
+    message.value = 'Email or password is not correct';
   }
 
    List<User> _fromStringList(String list) {
