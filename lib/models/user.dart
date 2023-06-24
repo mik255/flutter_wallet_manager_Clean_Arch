@@ -60,13 +60,6 @@ class User{
     return password.length >= 8;
   }
 
-  static List<User> fromStringList(List<String> list) {
-    List<User> users = [];
-    for (String item in list) {
-      Map<String,dynamic> json = jsonDecode(item);
-      users.add(User.fromMap(json));
-    }
-    return users;
-  }
+
 
 }
