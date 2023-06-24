@@ -35,6 +35,7 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: emailController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -51,6 +52,7 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: passwordController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
