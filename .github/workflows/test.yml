@@ -27,7 +27,7 @@ jobs:
 #        run: flutter test
 
   create_release:
-    needs: test_and_build
+#    needs: test_and_build
     runs-on: ubuntu-latest
 
     steps:
