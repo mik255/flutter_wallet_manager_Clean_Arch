@@ -1,5 +1,6 @@
+import 'dart:convert';
 
-class User{
+class User {
   String email;
   String password;
 
@@ -48,4 +49,15 @@ class User{
     );
   }
 
+  bool validateEmail() {
+    RegExp emailRegex = RegExp(
+        r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool validatePassword() {
+    RegExp passwordRegex =
+        RegExp(r' ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$');
+    return passwordRegex.hasMatch(password);
+  }
 }

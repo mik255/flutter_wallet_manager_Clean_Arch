@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wallet_manager/shared/mainStances.dart';
 
-void main() {
+void main() async{
   runApp(const MyApp());
+  MainStances.init();
 }
 
 class MyApp extends StatelessWidget {
