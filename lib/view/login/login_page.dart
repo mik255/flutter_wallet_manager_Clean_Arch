@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  if (user.validatePassword()) {
+                  if (!user.validatePassword()) {
                     return 'password is not valid';
                   }
                   return null;
