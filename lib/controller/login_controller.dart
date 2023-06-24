@@ -1,18 +1,23 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 import '../data/abstract_preferences_helper.dart';
 import '../models/user.dart';
 
 class LoginController {
   User user;
   IPreferencesHelper helper;
-
+  var formKey = GlobalKey<FormState>();
   LoginController({
     required this.user,
     required this.helper,
   });
 
   login() async{
+    if(!formKey.currentState!.validate()){
+      return;
+    }
     String? result = await helper.getData('users');
     if(result != null){
       List<User> users = _fromStringList(result);
@@ -24,18 +29,6 @@ class LoginController {
     }
   }
 
-  String? validate(){
-
-     if(!user.validateEmail()){
-      return 'Invalid Email';
-    }
-     if(!user.validatePassword()){
-      return 'Invalid Password';
-    }
-     if(user.validateEmail()&&user.validatePassword()){
-       return null;
-     }
-  }
    List<User> _fromStringList(String list) {
     List<String> resultList = jsonDecode(list);
     List<User> users = [];
