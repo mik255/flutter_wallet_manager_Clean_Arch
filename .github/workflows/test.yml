@@ -1,0 +1,25 @@
+name: Testes
+
+on:
+  push:
+    branches:
+      - main  # substitua "main" pelo nome da sua branch principal
+  pull_request:
+    branches:
+      - main  # substitua "main" pelo nome da sua branch principal
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configurar ambiente
+        uses: actions/checkout@v2
+
+      - name: Configurar ambiente Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.4'
+
+      - name: Executar testes
+        run: flutter test
