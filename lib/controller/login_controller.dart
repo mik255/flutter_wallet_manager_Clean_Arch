@@ -23,6 +23,19 @@ class LoginController {
       }
     }
   }
+
+  String? validate(){
+
+     if(!user.validateEmail()){
+      return 'Invalid Email';
+    }
+     if(!user.validatePassword()){
+      return 'Invalid Password';
+    }
+     if(user.validateEmail()&&user.validatePassword()){
+       return null;
+     }
+  }
    List<User> _fromStringList(String list) {
     List<String> resultList = jsonDecode(list);
     List<User> users = [];
