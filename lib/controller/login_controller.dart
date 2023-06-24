@@ -34,7 +34,7 @@ class LoginController {
   List<User> _fromStringList(String list) {
     List<dynamic> resultList = jsonDecode(list);
     List<User> users = [];
-    for (Map<String,dynamic> json in resultList) {
+    for (Map<String, dynamic> json in resultList) {
       users.add(User.fromMap(json));
     }
     return users;
