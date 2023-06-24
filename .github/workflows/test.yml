@@ -3,10 +3,10 @@ name: Testes
 on:
   push:
     branches:
-      - main  # substitua "main" pelo nome da sua branch principal
+      - develop  # substitua "main" pelo nome da sua branch principal
   pull_request:
     branches:
-      - main  # substitua "main" pelo nome da sua branch principal
+      - develop  # substitua "main" pelo nome da sua branch principal
 
 jobs:
   test:
