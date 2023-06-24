@@ -40,8 +40,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: v1.0.0  # substitua pela tag/version desejada
-          release_name: Release v1.0.0  # substitua pelo nome do lançamento desejado
+          tag_name: release-${{ github.sha }}
+          release_name: Release ${{ github.sha }}
           draft: false
           prerelease: false
 
