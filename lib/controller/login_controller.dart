@@ -18,9 +18,6 @@ class LoginController {
 
   login() async {
     message.value = '';
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
     String? result = await helper.getData('users');
     if (result != null) {
       List<User> users = _fromStringList(result);
@@ -35,10 +32,9 @@ class LoginController {
   }
 
   List<User> _fromStringList(String list) {
-    List<String> resultList = jsonDecode(list);
+    List<dynamic> resultList = jsonDecode(list);
     List<User> users = [];
-    for (String item in resultList) {
-      Map<String, dynamic> json = jsonDecode(item);
+    for (Map<String,dynamic> json in resultList) {
       users.add(User.fromMap(json));
     }
     return users;
