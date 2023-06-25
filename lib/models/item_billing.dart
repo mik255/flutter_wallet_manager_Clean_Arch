@@ -1,9 +1,9 @@
-enum BillingCategory {food,card,other}
+enum BillingCategory { food, card, other }
 
-class BillingItem{
+class BillingItem {
   String name;
-  double price;
-  double totalPrice = 0;
+  num price;
+  num totalPrice = 0;
   int installments;
   BillingCategory category;
 
@@ -62,17 +62,14 @@ class BillingItem{
 
   factory BillingItem.fromMap(Map<String, dynamic> map) {
     return BillingItem(
-      name: map['name'] as String,
-      price: map['price'] as double,
-      installments: map['installments'] as int,
-      category: map['category'] as BillingCategory,
-    );
+        name: map['name'] as String,
+        price: map['price'] as num,
+        installments: map['installments'] as int,
+        category: BillingCategory.values
+            .firstWhere((element) => map['category'] == element.name));
   }
 
-  getTotal(){
-    return totalPrice = price*installments;
+  getTotal() {
+    return totalPrice = price * installments;
   }
-
-
-
 }

@@ -55,8 +55,7 @@ class Billing {
   factory Billing.fromMap(Map<String, dynamic> map) {
     return Billing(
       name: map['name'] as String,
-      items: map['items'] as List<BillingItem>,
-      image: map['image'] as File,
+      items: (map['items'] as List<dynamic>).map((e) => BillingItem.fromMap(e)).toList(),
     );
   }
 
