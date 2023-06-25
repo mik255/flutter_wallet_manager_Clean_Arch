@@ -3,6 +3,7 @@ enum BillingCategory {food,card,other}
 class BillingItem{
   String name;
   double price;
+  double totalPrice = 0;
   int installments;
   BillingCategory category;
 
@@ -68,5 +69,10 @@ class BillingItem{
     );
   }
 
-//</editor-fold>
+  getTotal(){
+    return totalPrice = price*installments;
+  }
+
+
+
 }

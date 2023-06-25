@@ -6,13 +6,13 @@ import 'item_billing.dart';
 class Billing {
   String name;
   List<BillingItem> items;
-  File image;
+  File? image;
 
 //<editor-fold desc="Data Methods">
   Billing({
     required this.name,
     required this.items,
-    required this.image,
+     this.image,
   });
 
   @override
@@ -60,5 +60,11 @@ class Billing {
     );
   }
 
-//</editor-fold>
+ double getTotal(){
+    double total = 0;
+    for (var element in items) {
+      total+=element.getTotal();
+    }
+    return total;
+ }
 }
