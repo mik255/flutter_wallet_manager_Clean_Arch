@@ -39,4 +39,16 @@ void main() {
 
     expect(loginController.message.value, 'Email or password is not correct');
   });
+
+  test('email and password should be valid', () async {
+     User user = User(email: 'mikael20informatica@gmail.com ',
+         password: ' MFgpui&@3214Test');
+
+     loginController.user = user;
+     bool emailIsValid = loginController.user.validateEmail();
+     bool passwordIsValid = loginController.user.validatePassword();
+
+    expect(emailIsValid, true);
+    expect(passwordIsValid, true);
+  });
 }
