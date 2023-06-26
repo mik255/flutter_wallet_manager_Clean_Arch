@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/shared/mainStances.dart';
+import 'package:wallet_manager/shared/main_stances.dart';
 import 'package:wallet_manager/view/login/login_page.dart';
 
 void main() async{

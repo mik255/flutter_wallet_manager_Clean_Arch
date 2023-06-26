@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/controller/login_controller.dart';
 import 'package:wallet_manager/data/preferences_helper.dart';
-import 'package:wallet_manager/shared/mainStances.dart';
+import 'package:wallet_manager/shared/main_stances.dart';
 import '../../models/user.dart';
+import '../designer_system/custom_text_field.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -46,9 +47,7 @@ class LoginPage extends StatelessWidget {
                   }
                   return null;
                 },
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
+                decoration: CustomTextFieldDecorator().getInputDecorator('Email'),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
@@ -64,9 +63,7 @@ class LoginPage extends StatelessWidget {
                   return null;
                 },
                 obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
+                decoration: CustomTextFieldDecorator().getInputDecorator('Password'),
               ),
               const SizedBox(height: 16.0),
               AnimatedBuilder(
