@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home:  HomePage(),
+      home:  LoginPage(),
     );
   }
 }
