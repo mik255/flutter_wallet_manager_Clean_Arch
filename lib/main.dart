@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home:  LoginPage(),
+      home:  HomePage(),
     );
   }
 }
