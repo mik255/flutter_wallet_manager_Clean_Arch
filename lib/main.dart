@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/shared/mainStances.dart';
+import 'package:wallet_manager/shared/main_stances.dart';
 import 'package:wallet_manager/view/login/login_page.dart';
 
 void main() async{
@@ -17,7 +17,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            primary: Colors.blue,
+            secondary: Colors.white,
+            seedColor: Colors.blue),
         useMaterial3: true,
       ),
       home:  LoginPage(),

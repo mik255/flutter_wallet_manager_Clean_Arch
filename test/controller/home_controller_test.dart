@@ -2,8 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallet_manager/controller/home_controller.dart';
 import 'package:wallet_manager/data/abstract_preferences_helper.dart';
-import 'package:wallet_manager/models/billing.dart';
-import 'package:wallet_manager/models/item_billing.dart';
 String jsonData = '''
 [
   {
