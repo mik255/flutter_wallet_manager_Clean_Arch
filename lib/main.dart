@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
+import 'package:wallet_manager/view/home/home_page.dart';
 import 'package:wallet_manager/view/login/login_page.dart';
 
 void main() async{
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home:  LoginPage(),
+      home:  HomePage(),
     );
   }
 }
