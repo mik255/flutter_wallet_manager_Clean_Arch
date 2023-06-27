@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class CustomTextFieldDecorator{
 
-  getInputDecorator(String label){
+  getInputDecorator(String label,{Color color = Colors.white}){
     return  InputDecoration(
-      fillColor: Colors.white,
+      fillColor: color,
       filled: true,
       enabledBorder: const OutlineInputBorder(
         borderSide: BorderSide(
