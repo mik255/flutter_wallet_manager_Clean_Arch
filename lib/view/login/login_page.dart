@@ -3,8 +3,9 @@ import 'package:wallet_manager/controller/login_controller.dart';
 import 'package:wallet_manager/data/preferences_helper.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
 import '../../models/user.dart';
-import '../designer_system/button_decoretor.dart';
-import '../designer_system/custom_text_field.dart';
+import '../styles/button_decoretor.dart';
+import '../styles/custom_text_field.dart';
+
 
 final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
