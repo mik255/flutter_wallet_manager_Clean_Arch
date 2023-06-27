@@ -31,9 +31,20 @@ class BillingItemWidget extends StatelessWidget {
                   .getBoxDecoration(
                 color: Colors.white,
               ),
-              child: Image.network(
-                'https://t.ctcdn.com.br/3tQdC0dhzmQcV8uSocwIy8gtyic=/400x400/smart/filters:format(webp)/i624750.png',
-                fit: BoxFit.cover,
+              child: Center(
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  height: 40,
+                  width: 40,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Image.network(
+                    'https://t.ctcdn.com.br/3tQdC0dhzmQcV8uSocwIy8gtyic=/400x400/smart/filters:format(webp)/i624750.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 10),
