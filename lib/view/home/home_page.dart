@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/view/designer_system/container_decorators.dart';
 
-import '../designer_system/text_styles.dart';
+import '../styles/container_decorators.dart';
+import '../styles/text_styles.dart';
+
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
