@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 
+import '../../controller/speech_to_text_controller.dart';
 import '../styles/button_decoretor.dart';
 import '../styles/container_decorators.dart';
 import '../styles/custom_text_field.dart';
 import '../styles/text_styles.dart';
 
-class BillingRegisterPage extends StatelessWidget {
+class BillingRegisterPage extends StatefulWidget {
   BillingRegisterPage({super.key});
 
-  final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerPrice = TextEditingController();
+  @override
+  State<BillingRegisterPage> createState() => _BillingRegisterPageState();
+}
+
+class _BillingRegisterPageState extends State<BillingRegisterPage> {
+
+  SpeechToTextController speechToTextController = SpeechToTextController();
   String installments = '1x';
+  bool listening = false;
+  @override
+  void initState() {
+    speechToTextController.init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +48,8 @@ class BillingRegisterPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 16),
                   child: Container(
                     height: 150,
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -46,8 +58,8 @@ class BillingRegisterPage extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,9 +126,10 @@ class BillingRegisterPage extends StatelessWidget {
                     children: [
                       TextFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        controller: _controllerName,
-                        decoration:
-                            CustomTextFieldDecorator().getInputDecorator('Nome',color:const Color(0xFFF8F8F8)),
+                        controller: speechToTextController.controllerName,
+                        decoration: CustomTextFieldDecorator()
+                            .getInputDecorator('Nome',
+                                color: const Color(0xFFF8F8F8)),
                       ),
                       const SizedBox(height: 16),
                       Container(
@@ -127,9 +140,12 @@ class BillingRegisterPage extends StatelessWidget {
                             Expanded(
                               flex: 3,
                               child: TextFormField(
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                controller: _controllerPrice,
-                                decoration: CustomTextFieldDecorator().getInputDecorator(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                controller: speechToTextController
+                                    .controllerPrice,
+                                decoration: CustomTextFieldDecorator()
+                                    .getInputDecorator(
                                   'Preço',
                                   color: const Color(0xFFF8F8F8),
                                 ),
@@ -140,39 +156,70 @@ class BillingRegisterPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      MyDropdown(),
+                      TextFormField(
+                        autovalidateMode:
+                        AutovalidateMode.onUserInteraction,
+                        controller: speechToTextController
+                            .controllerCategory,
+                        decoration: CustomTextFieldDecorator()
+                            .getInputDecorator(
+                          'Categoria',
+                          color: const Color(0xFFF8F8F8),
+                        ),
+                      ),
                     ],
                   )),
                 ),
                 SizedBox(height: 32),
-                Text(
-                  'Ex: tv de 55 polegadas, preço sinquenta em 10 vezes',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  width: 83.34,
-                  height: 83.34,
-                  decoration: const ShapeDecoration(
-                    color: Color(0xFFDDDDDD),
-                    shape: OvalBorder(),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'record',
-                      style: TextStyle(
-                        color: Color(0xFF3B3B3B),
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w400,
+                AnimatedBuilder(
+                    animation: speechToTextController.text,
+                    builder: (context, child) {
+                      return Text(
+                        speechToTextController.text.value == ''
+                            ? 'Ex: tv de 55 polegadas, preço sinquenta em 10 vezes'
+                            : speechToTextController.text.value,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 13,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      );
+                    }),
+                const SizedBox(height: 16),
+                AnimatedBuilder(
+                  animation: speechToTextController.isListening,
+                  builder: (context,child) {
+                    return InkWell(
+                      onTap: () {
+                        if (speechToTextController.isListening.value == false) {
+                          speechToTextController.startListening();
+                        } else {
+                          speechToTextController.stopListening();
+                        }
+
+                      },
+                      child: Container(
+                        width: 83.34,
+                        height: 83.34,
+                        decoration:  ShapeDecoration(
+                          color: speechToTextController.isListening.value?Colors.red:const Color(0xFFDDDDDD),
+                          shape: const OvalBorder(),
+                        ),
+                        child:  Center(
+                          child: Text(
+                            'record',
+                            style: TextStyle(
+                              color: speechToTextController.isListening.value?Colors.white:const Color(0xFF3B3B3B),
+                              fontSize: 16,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  }
                 ),
               ],
             ),
