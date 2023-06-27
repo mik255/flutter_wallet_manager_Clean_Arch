@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../styles/container_decorators.dart';
+import 'package:wallet_manager/view/home/widgets/billing_item_widget.dart';
+import 'package:wallet_manager/view/home/widgets/perfil.dart';
 import '../styles/text_styles.dart';
 
 
@@ -25,40 +25,7 @@ class HomePage extends StatelessWidget {
                   height: 300,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              clipBehavior: Clip.antiAlias,
-                              height: 80,
-                              width: 80,
-                              decoration:
-                                  ContainerDecorators().getBoxDecoration(
-                                color: Colors.white,
-                              ),
-                              child: Image.network(
-                                'https://www.publicbooks.org/wp-content/uploads/2019/11/joel-mott-LaK153ghdig-unsplash-scaled-e1574787737429.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(width: 8,),
-                            Text(
-                              'Larissa',
-                              style: CustomTextStyles()
-                                  .smallTitle
-                                  .copyWith(color: Colors.black),
-                            ),
-                            Spacer(),
-                            const Column(
-                              children: [
-                                Text('26/08/2021'),
-                                Text('Quarta-feira'),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
+                      const PerfilWidget(),
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -100,58 +67,7 @@ class HomePage extends StatelessWidget {
                     children: [
                       ...List.generate(
                           10,
-                          (index) => Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFDDE2EB),
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8,vertical: 16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        clipBehavior: Clip.antiAlias,
-                                        height: 50,
-                                        width: 50,
-                                        decoration: ContainerDecorators()
-                                            .getBoxDecoration(
-                                          color: Colors.white,
-                                        ),
-                                        child: Image.network(
-                                          'https://t.ctcdn.com.br/3tQdC0dhzmQcV8uSocwIy8gtyic=/400x400/smart/filters:format(webp)/i624750.png',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'NuBank',
-                                            style: CustomTextStyles()
-                                                .smallSubtitle
-                                                .copyWith(
-                                                    fontWeight: FontWeight.w500),
-                                          ),
-                                          Text('\$ 500,00',
-                                              style: CustomTextStyles()
-                                                  .smallTitle
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                          ))
+                          (index) => const BillingItemWidget())
                     ],
                   ),
                 ),
