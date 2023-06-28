@@ -12,7 +12,7 @@ class PlugglyService implements FinancialDataHelperService {
   String clientId = '44ffcfd5-4714-4d01-a789-752a757fee90';
   String clientSecret = 'b4d15664-5957-4a9e-9b3f-c121cdf78472';
 
-  Set<String> cacheAccounts = {};
+  Set<String> cacheItems = {};
   Dio dio = Dio()..interceptors.add(LogInterceptor(responseBody: true));
   @override
   Set<BankAccount> getBankAccounts = {};
@@ -20,9 +20,7 @@ class PlugglyService implements FinancialDataHelperService {
 
   loadData() async {
     prefs = await SharedPreferences.getInstance();
-    cacheAccounts = prefs!.getStringList('accounts')?.toSet() ?? {};
-    getBankAccounts =
-        cacheAccounts.map((e) => BankAccount.fromJson(jsonDecode(e))).toSet();
+    cacheItems = prefs!.getStringList('items')?.toSet() ?? {};
 
     final apiKeyResponse = await dio.post('$baseUrl/auth',
         options: Options(
@@ -45,6 +43,11 @@ class PlugglyService implements FinancialDataHelperService {
     );
 
     accessToken = accessTokenResponse.data['accessToken'];
+
+    var result = await Future.wait([
+      ...cacheItems.map((e) =>  getAccount(e)),
+    ]);
+    getBankAccounts = result.toSet();
   }
 
   Future<List<Transaction>> getTransactions(String accountId) async {
@@ -99,8 +102,8 @@ class PlugglyService implements FinancialDataHelperService {
       balanceTypes: listBalances,
     );
     getBankAccounts.add(account);
-    cacheAccounts.add(jsonEncode(account.toJson()));
-    await prefs!.setStringList('accounts', cacheAccounts.toList());
+    cacheItems.add(itemId);
+    await prefs!.setStringList('items', cacheItems.toList());
     return account;
   }
 }

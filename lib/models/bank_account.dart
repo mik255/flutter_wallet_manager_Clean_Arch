@@ -21,7 +21,21 @@ class BankAccount{
   }
 }
 // ignore: constant_identifier_names
-enum BalanceTypeEnum { CHECKING_ACCOUNT, SAVING_ACCOUNT,CREDIT_CARD }
+enum BalanceTypeEnum { CHECKING_ACCOUNT, SAVINGS_ACCOUNT,CREDIT_CARD }
+
+extension GetName on BalanceTypeEnum{
+  String get getName{
+    switch(this){
+      case BalanceTypeEnum.CHECKING_ACCOUNT:
+        return 'Saldo em conta';
+      case BalanceTypeEnum.SAVINGS_ACCOUNT:
+        return 'Saldo em poupança';
+      case BalanceTypeEnum.CREDIT_CARD:
+        return 'Saldo em crédito';
+    }
+  }
+}
+
 class BalanceType {
   String id;
   String name;

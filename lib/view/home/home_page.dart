@@ -142,8 +142,7 @@ class _HomePageState extends State<HomePage> {
                       padding:
                       const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
                       child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
+                        child: Column(
                           children: [
                             ...List.generate(
                                 MainStances.plugglyService.getBankAccounts
