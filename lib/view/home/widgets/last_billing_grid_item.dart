@@ -26,32 +26,32 @@ class LestBillingGridItem extends StatelessWidget {
               ),
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        ...List.generate(
-                            10,
-                                (index) => const BillingItemWidget())
-                      ],
-                    ),
-                    SizedBox(height: 16,),
-                    Row(
-                      children: [
-                        ...List.generate(
-                            10,
-                                (index) => const BillingItemWidget())
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
+          // SingleChildScrollView(
+          //   scrollDirection: Axis.horizontal,
+          //   child: Row(
+          //     children: [
+          //       Column(
+          //         children: [
+          //           Row(
+          //             children: [
+          //               ...List.generate(
+          //                   10,
+          //                       (index) => const BillingItemWidget(bankAccount: [],))
+          //             ],
+          //           ),
+          //           SizedBox(height: 16,),
+          //           Row(
+          //             children: [
+          //               ...List.generate(
+          //                   10,
+          //                       (index) => const BillingItemWidget())
+          //             ],
+          //           )
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

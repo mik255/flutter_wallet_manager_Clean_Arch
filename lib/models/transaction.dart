@@ -1,7 +1,7 @@
 class Transaction{
   String name;
   String date;
-  String amount;
+  num amount;
   String installments;
   String bankName;
 
@@ -27,7 +27,7 @@ class Transaction{
     return Transaction(
       name: map['name'] as String,
       date: map['date'] as String,
-      amount: map['amount'] as String,
+      amount: map['amount'] as num,
       installments: map['installments'] as String,
       bankName: map['bankName'] as String,
     );

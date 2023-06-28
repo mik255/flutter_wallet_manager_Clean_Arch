@@ -1,12 +1,13 @@
-
-
 import 'package:flutter/material.dart';
 
+import '../../../models/bank_account.dart';
 import '../../styles/container_decorators.dart';
 import '../../styles/text_styles.dart';
 
 class BillingItemWidget extends StatelessWidget {
-  const BillingItemWidget({super.key});
+  const BillingItemWidget({super.key, required this.bankAccount});
+
+  final BankAccount bankAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,7 @@ class BillingItemWidget extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding:
-        const EdgeInsets.symmetric(horizontal: 8,vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,8 +27,7 @@ class BillingItemWidget extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               height: 50,
               width: 50,
-              decoration: ContainerDecorators()
-                  .getBoxDecoration(
+              decoration: ContainerDecorators().getBoxDecoration(
                 color: Colors.white,
               ),
               child: Center(
@@ -50,23 +49,31 @@ class BillingItemWidget extends StatelessWidget {
             const SizedBox(width: 10),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   'NuBank',
                   style: CustomTextStyles()
                       .smallSubtitle
-                      .copyWith(
-                      fontWeight: FontWeight.w500),
+                      .copyWith(fontWeight: FontWeight.w500),
                 ),
-                Text('\$ 500,00',
-                    style: CustomTextStyles()
-                        .smallTitle
-                        .copyWith(
-                        fontWeight:
-                        FontWeight.bold)),
+                ...bankAccount.balanceTypes.map((e) => Row(
+                  children: [
+                    Text(
+                      '\$ ${e.balanceType.name} :',
+                      style: CustomTextStyles()
+                          .smallSubtitle
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      '\$ ${e.balance}',
+                          style: CustomTextStyles()
+                              .smallSubtitle
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                  ],
+                )),
               ],
             )
           ],

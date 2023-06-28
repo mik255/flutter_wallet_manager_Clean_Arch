@@ -13,7 +13,7 @@ class PlugglyService implements FinancialDataHelperService {
   String clientSecret = 'b4d15664-5957-4a9e-9b3f-c121cdf78472';
 
   Set<String> cacheAccounts = {};
-  Dio dio = Dio();
+  Dio dio = Dio()..interceptors.add(LogInterceptor(responseBody: true));
   @override
   Set<BankAccount> getBankAccounts = {};
   SharedPreferences? prefs;
@@ -57,16 +57,17 @@ class PlugglyService implements FinancialDataHelperService {
         },
       ),
     );
-    return (response.data['results'] as List<dynamic>)
+    var data = response.data['results'] as List<dynamic>;
+    return (data)
         .map((e) => Transaction(
-              name: response.data['description'],
-              date: response.data['date'],
-              amount: response.data['amount'],
-              installments: response.data['creditCardMetadata'] == null
+              name: e['description'],
+              date: e['date'],
+              amount: e['amount'],
+              installments: e['creditCardMetadata'] == null
                   ? '' // case true, transaction have no installments
-                  : response.data['creditCardMetadata']['installmentNumber'] +
+                  : e['creditCardMetadata']['installmentNumber'] +
                       '/' +
-                      response.data['creditCardMetadata']['totalInstallments'],
+                  e['creditCardMetadata']['totalInstallments'],
               bankName: '',
             ))
         .toList();
@@ -86,21 +87,19 @@ class PlugglyService implements FinancialDataHelperService {
         (response.data['results'] as List<dynamic>).map((e) async {
       var transactions = await getTransactions(e['id']);
       return BalanceType(
-        id: e['id'],
-        name: e['name'],
+        id: e['id'] ?? 'null',
+        name: e['name'] ?? 'null',
         balance: e['balance'],
-        balanceType: BalanceTypeEnum.values[e['subtype']],
+        balanceType: BalanceTypeEnum.values.firstWhere((element) => element.name == e['subtype'], orElse: () => BalanceTypeEnum.CHECKING_ACCOUNT),
         logo: '',
         transactions: transactions,
       );
     }).toList());
     var account = BankAccount(
-      accountId: response.data['id'],
-      name: response.data['name'],
       balanceTypes: listBalances,
     );
     getBankAccounts.add(account);
-    cacheAccounts.add(account.toJson().toString());
+    cacheAccounts.add(jsonEncode(account.toJson()));
     await prefs!.setStringList('accounts', cacheAccounts.toList());
     return account;
   }
