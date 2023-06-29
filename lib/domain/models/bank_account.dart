@@ -1,4 +1,6 @@
-import 'package:wallet_manager/models/transaction.dart';
+
+
+import 'package:wallet_manager/domain/models/transaction.dart';
 
 class BankAccount{
   List<BalanceType> balanceTypes;

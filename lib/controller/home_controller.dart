@@ -1,6 +1,6 @@
 import 'dart:convert';
+import '../domain/models/billing.dart';
 import '../infra/abstract_preferences_helper.dart';
-import '../models/billing.dart';
 
 
 class HomeController {
