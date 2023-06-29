@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../controller/speech_to_text_controller.dart';
-import '../styles/button_decoretor.dart';
-import '../styles/container_decorators.dart';
-import '../styles/custom_text_field.dart';
-import '../styles/text_styles.dart';
+import '../../../controller/speech_to_text_controller.dart';
+import '../../styles/button_decoretor.dart';
+import '../../styles/container_decorators.dart';
+import '../../styles/custom_text_field.dart';
+import '../../styles/text_styles.dart';
 
 class BillingRegisterPage extends StatefulWidget {
   BillingRegisterPage({super.key});

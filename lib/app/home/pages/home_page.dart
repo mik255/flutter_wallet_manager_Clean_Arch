@@ -2,13 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_pluggy_connect/flutter_pluggy_connect.dart';
-import 'package:wallet_manager/app/home/transactions_page.dart';
+import 'package:wallet_manager/app/home/pages/transactions_page.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
 import 'package:wallet_manager/app/home/widgets/perfil.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
-import '../styles/text_styles.dart';
-import 'dart:math';
-
+import '../../styles/text_styles.dart';
 import 'loadingPage.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
