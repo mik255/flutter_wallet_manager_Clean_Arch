@@ -5,7 +5,7 @@ import 'package:flutter_pluggy_connect/flutter_pluggy_connect.dart';
 import 'package:wallet_manager/app/home/pages/transactions_page.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
 import 'package:wallet_manager/app/home/widgets/perfil.dart';
-import 'package:wallet_manager/shared/main_stances.dart';
+import '../../../main_stances.dart';
 import '../../styles/text_styles.dart';
 import 'loadingPage.dart';
 class HomePage extends StatefulWidget {

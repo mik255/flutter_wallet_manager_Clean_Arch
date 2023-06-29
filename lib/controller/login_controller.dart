@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
-
-import '../data/abstract_preferences_helper.dart';
+import '../infra/abstract_preferences_helper.dart';
 import '../models/user.dart';
 
 class LoginController {

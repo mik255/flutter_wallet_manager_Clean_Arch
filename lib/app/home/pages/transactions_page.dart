@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
-import 'package:wallet_manager/models/bank_account.dart';
-import 'package:wallet_manager/shared/main_stances.dart';
 
 
+import '../../../main_stances.dart';
 import '../../../models/transaction.dart';
 
 List<Transaction> transactions = [];

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/shared/main_stances.dart';
+import '../../../main_stances.dart';
 import 'home_page.dart';
 
 

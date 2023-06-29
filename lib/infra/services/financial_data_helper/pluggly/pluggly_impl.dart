@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet_manager/models/transaction.dart';
-import 'package:wallet_manager/services/financial_data_helper/helper.dart';
-import '../../../models/bank_account.dart';
+
+import '../../../../models/bank_account.dart';
+import '../helper.dart';
+
 
 class PlugglyService implements FinancialDataHelperService {
   String baseUrl = 'https://api.pluggy.ai';
