@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet_manager/models/transaction.dart';
@@ -9,8 +10,7 @@ class PlugglyService implements FinancialDataHelperService {
   String baseUrl = 'https://api.pluggy.ai';
   String apiKey = '';
   String accessToken = '';
-  String clientId = '44ffcfd5-4714-4d01-a789-752a757fee90';
-  String clientSecret = 'b4d15664-5957-4a9e-9b3f-c121cdf78472';
+
 
   Set<String> cacheItems = {};
   Dio dio = Dio()..interceptors.add(LogInterceptor(responseBody: true));
@@ -19,6 +19,11 @@ class PlugglyService implements FinancialDataHelperService {
   SharedPreferences? prefs;
 
   loadData() async {
+    Platform.environment.forEach((key, value) {
+      print('$key: $value');
+    });
+    const clientId = String.fromEnvironment('CLIENT_ID');
+    const clientSecret = String.fromEnvironment('CLIENT_SECRET');
     prefs = await SharedPreferences.getInstance();
     cacheItems = prefs!.getStringList('items')?.toSet() ?? {};
 
