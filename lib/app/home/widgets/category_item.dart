@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/view/styles/container_decorators.dart';
 
+
+import '../../styles/container_decorators.dart';
 import '../../styles/text_styles.dart';
 
 class CategoryItem extends StatelessWidget {

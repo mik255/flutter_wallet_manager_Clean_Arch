@@ -12,7 +12,7 @@ void main() {
   late MockPreferencesHelper mockHelper;
 
   setUp(() {
-    user = User(email: 'test@example.com', password: 'password123');
+    user = User(email: 'test@example.com', password: 'password123', name: '');
     mockHelper = MockPreferencesHelper();
     loginController = LoginController(user: user, helper: mockHelper);
   });
@@ -42,7 +42,7 @@ void main() {
 
   test('email and password should be valid', () async {
      User user = User(email: 'mikael20informatica@gmail.com ',
-         password: ' MFgpui&@3214Test');
+         password: ' MFgpui&@3214Test', name: '');
 
      loginController.user = user;
      bool emailIsValid = loginController.user.validateEmail();

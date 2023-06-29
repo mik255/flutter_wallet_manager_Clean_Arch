@@ -2,17 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_pluggy_connect/flutter_pluggy_connect.dart';
+import 'package:wallet_manager/app/home/transactions_page.dart';
+import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
+import 'package:wallet_manager/app/home/widgets/perfil.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
-import 'package:wallet_manager/view/home/loadingPage.dart';
-import 'package:wallet_manager/view/home/transactions_page.dart';
-import 'package:wallet_manager/view/home/widgets/billing_item_widget.dart';
-import 'package:wallet_manager/view/home/widgets/category_item.dart';
-import 'package:wallet_manager/view/home/widgets/last_billing_grid_item.dart';
-import 'package:wallet_manager/view/home/widgets/middle_info.dart';
-import 'package:wallet_manager/view/home/widgets/percentage_related.dart';
-import 'package:wallet_manager/view/home/widgets/perfil.dart';
 import '../styles/text_styles.dart';
 import 'dart:math';
+
+import 'loadingPage.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
