@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/login/login_build.dart';
-import 'package:wallet_manager/services/auth/google_login_impl.dart';
-
+import '../../../infra/services/auth/google_login_impl.dart';
 import '../../styles/container_decorators.dart';
 import '../../styles/text_styles.dart';
 import '../../view_models/user_viewmodel.dart';

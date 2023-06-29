@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/app/view_models/user_viewmodel.dart';
-import 'package:wallet_manager/shared/main_stances.dart';
 import 'package:provider/provider.dart';
 import 'app/login/login_build.dart';
-import 'data/preferences_helper.dart';
+import 'infra/preferences_helper.dart';
+import 'main_stances.dart';
 
 
 void main() async{
