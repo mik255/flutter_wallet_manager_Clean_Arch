@@ -18,6 +18,15 @@ class User {
   String toMapString(){
     return '{email: $email, password: $password, name: $name, photoUrl: $photoUrl}';
   }
+
+  Map<String,dynamic> toMap(){
+    return {
+      'email': email,
+      'password': password,
+      'name': name,
+      'photoUrl': photoUrl
+    };
+  }
   User({
     required this.email,
     this.password,
