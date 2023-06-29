@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
-import 'package:wallet_manager/view/home/billing_register_page.dart';
-import 'package:wallet_manager/view/home/home_page.dart';
-import 'package:wallet_manager/view/home/loadingPage.dart';
-import 'package:wallet_manager/view/login/login_page.dart';
+
+import 'app/login/login_build.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home:  const LoadingPage(),
+      home:  const LoginBuild(),
     );
   }
 }
