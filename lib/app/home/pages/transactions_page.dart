@@ -4,7 +4,7 @@ import 'package:wallet_manager/models/bank_account.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
 
 
-import '../../models/transaction.dart';
+import '../../../models/transaction.dart';
 
 List<Transaction> transactions = [];
 

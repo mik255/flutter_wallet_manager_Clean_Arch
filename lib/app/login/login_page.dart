@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/home/home_page.dart';
+import 'package:wallet_manager/app/home/pages/home_page.dart';
 import 'package:wallet_manager/app/view_models/user_viewmodel.dart';
 import 'package:wallet_manager/data/preferences_helper.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
