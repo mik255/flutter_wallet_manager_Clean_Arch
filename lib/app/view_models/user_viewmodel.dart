@@ -8,7 +8,6 @@ class UserViewModel {
   User? user;
   IPreferencesHelper helper;
   ValueNotifier<String> message = ValueNotifier('');
-  var formKey = GlobalKey<FormState>();
 
   UserViewModel({
     required this.helper,
