@@ -3,14 +3,15 @@ import 'package:wallet_manager/models/user.dart';
 import 'package:wallet_manager/services/auth/auth_service_helper.dart';
 
 class GoogleLoginServiceImpl implements AuthServiceHelper {
+  GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
   @override
-  Future<User> auth() async {
-    GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: [
-        'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
-      ],
-    );
+  Future<User> singIn() async {
+
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
@@ -21,6 +22,15 @@ class GoogleLoginServiceImpl implements AuthServiceHelper {
           name: googleUser.displayName ?? "");
     } catch (error) {
       throw 'Error on Google Login';
+    }
+  }
+
+  @override
+  Future<void> singOut() async{
+    try {
+      await googleSignIn.signOut();
+    } catch (error) {
+      throw 'Error on Google Logout';
     }
   }
 }

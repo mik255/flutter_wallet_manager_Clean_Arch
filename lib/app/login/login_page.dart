@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:wallet_manager/app/home/home_page.dart';
-import 'package:wallet_manager/app/login/viewmodel/login_viewmodel.dart';
-import 'package:wallet_manager/app/styles/container_decorators.dart';
-import 'package:wallet_manager/controller/login_controller.dart';
+import 'package:wallet_manager/app/view_models/user_viewmodel.dart';
 import 'package:wallet_manager/data/preferences_helper.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
-import '../../models/user.dart';
 import '../../services/auth/google_login_impl.dart';
-import '../styles/button_decoretor.dart';
-import '../styles/custom_text_field.dart';
+
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -20,7 +16,7 @@ class LoginPage extends StatelessWidget {
     SharedPreferencesHelper helper = SharedPreferencesHelper(
       MainStances.preferences,
     );
-    LoginViewModel viewModel = LoginViewModel(
+    UserViewModel viewModel = UserViewModel(
       helper: helper,
     );
 
