@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wallet_manager/models/transaction.dart';
-
-import '../../../../models/bank_account.dart';
+import '../../../../domain/models/bank_account.dart';
+import '../../../../domain/models/transaction.dart';
 import '../helper.dart';
 
 

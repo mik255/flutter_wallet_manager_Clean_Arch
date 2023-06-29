@@ -1,7 +1,8 @@
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:wallet_manager/models/user.dart';
 
 
+
+import '../../../domain/models/user.dart';
 import 'auth_service_helper.dart';
 
 class GoogleLoginServiceImpl implements AuthServiceHelper {
