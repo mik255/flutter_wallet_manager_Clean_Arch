@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "963063848772",
+    "project_id": "wallet-manager-46378",
+    "storage_bucket": "wallet-manager-46378.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963063848772:android:a16cc0a5f5aa2b0e980111",
+        "android_client_info": {
+          "package_name": "com.example.wallet_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963063848772-uabsia57qq5au220m084407j9en4ok77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2nr6QOyZsbvqpVWhSXbC8XsCIYhRuYjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963063848772-uabsia57qq5au220m084407j9en4ok77.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
