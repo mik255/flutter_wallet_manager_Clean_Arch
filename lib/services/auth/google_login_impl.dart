@@ -20,7 +20,7 @@ class GoogleLoginServiceImpl implements AuthServiceHelper {
           photoUrl: googleUser.photoUrl,
           name: googleUser.displayName ?? "");
     } catch (error) {
-      rethrow;
+      throw 'Error on Google Login';
     }
   }
 }
