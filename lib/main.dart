@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wallet_manager/app/view_models/user_viewmodel.dart';
 import 'package:wallet_manager/shared/main_stances.dart';
-
+import 'package:provider/provider.dart';
 import 'app/login/login_build.dart';
+import 'data/preferences_helper.dart';
 
 
 void main() async{
@@ -16,17 +18,29 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            primary: Colors.blue,
-            secondary: Colors.white,
-            seedColor: Colors.blue),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        // Aqui você pode adicionar todos os provedores que deseja fornecer
+        Provider<UserViewModel>(
+          create: (_) => UserViewModel(
+            helper: SharedPreferencesHelper(
+              MainStances.preferences,
+            )
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+              primary: Colors.blue,
+              secondary: Colors.white,
+              seedColor: Colors.blue),
+          useMaterial3: true,
+        ),
+        home:  const LoginBuild(),
       ),
-      home:  const LoginBuild(),
     );
   }
 }

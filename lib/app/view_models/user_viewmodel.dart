@@ -24,7 +24,7 @@ class UserViewModel {
       return false;
     }
   }
-  singOut(AuthServiceHelper authServiceHelper) async {
+  Future<void> singOut(AuthServiceHelper authServiceHelper) async {
     try {
       await authServiceHelper.singOut();
       await helper.deleteData('user');
