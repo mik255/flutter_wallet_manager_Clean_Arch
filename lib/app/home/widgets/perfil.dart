@@ -16,8 +16,8 @@ class PerfilWidget extends StatelessWidget {
       children: [
         Container(
           clipBehavior: Clip.antiAlias,
-          height: 65,
-          width: 65,
+          height: 55,
+          width: 55,
           decoration: ContainerDecorators().getBoxDecoration(
             color: Colors.white,
           ),
@@ -36,23 +36,19 @@ class PerfilWidget extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
-          width: 8,
-        ),
-        Text(
-          viewModel.user!.name,
-          style: CustomTextStyles().smallTitle.copyWith(color: Colors.black),
-        ),
-        const Spacer(),
-        InkWell(
-            onTap: () async {
-              await viewModel.singOut(GoogleLoginServiceImpl()).then((value) =>
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginBuild())));
-            },
-            child: const Text('Sair')),
+        // const SizedBox(
+        //   width: 8,
+        // ),
+        // const Spacer(),
+        // InkWell(
+        //     onTap: () async {
+        //       await viewModel.singOut(GoogleLoginServiceImpl()).then((value) =>
+        //           Navigator.pushReplacement(
+        //               context,
+        //               MaterialPageRoute(
+        //                   builder: (context) => const LoginBuild())));
+        //     },
+        //     child: const Text('Sair')),
       ],
     );
   }

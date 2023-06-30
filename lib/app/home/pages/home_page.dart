@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_pluggy_connect/flutter_pluggy_connect.dart';
 import 'package:wallet_manager/app/home/pages/transactions_page.dart';
@@ -9,7 +7,7 @@ import 'package:wallet_manager/app/shared_widgets/balance_info.dart';
 import 'package:wallet_manager/domain/models/financial_results_calculator.dart';
 import '../../../main_stances.dart';
 import '../../styles/text_styles.dart';
-import 'loadingPage.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,13 +20,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool showPlugglyConnect = false;
   late TabController _tabController;
   bool menuOpened = false;
-
+  bool loading = false;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-  }
+    loadData();
 
+  }
+  loadData()async{
+    loading = true;
+    await MainStances.plugglyService.loadData();
+    setState(() {
+      loading = false;
+    });
+  }
   @override
   void dispose() {
     _tabController.dispose();
@@ -132,18 +138,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ],
         ),
         body: Builder(builder: (context) {
+          if(loading){
+            return const Center(child: CircularProgressIndicator(),);
+          }
           if (showPlugglyConnect) {
             return PluggyConnect(
               connectToken: MainStances.plugglyService.accessToken,
               onSuccess: (data) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LoadingPage(
-                                id: data['item']['id'],
-                              )));
-                });
+                loadData();
               },
               onClose: () {
                 setState(() {
@@ -162,51 +164,74 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    height: 300,
                     child:  Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 8),
                       child: Column(
                         children: [
-                          const PerfilWidget(),
                           SizedBox(
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 3,
-                              mainAxisSpacing: 3,
-                              childAspectRatio: 2,
+                            width: MediaQuery.of(context).size.width,
+                            child: const Stack(
+                              alignment: Alignment.center,
                               children: [
-                                ...[
-                                  BalanceInfo(
-                                      name: 'Entrada',
-                                      balance:
-                                      financialResultsCalculator.inputsBalance.toDouble(),
-                                      icon: Icons.arrow_downward,
-                                      color: Colors.green),
-                                  BalanceInfo(
-                                      name: 'Saída',
-                                      balance: financialResultsCalculator.outputsBalance
-                                          .toDouble(),
-                                      icon: Icons.arrow_upward,
-                                      color: Colors.red),
-                                  BalanceInfo(
-                                      name: 'Poupança',
-                                      balance: financialResultsCalculator.savingsBalance
-                                          .toDouble(),
-                                      icon: Icons.savings,
-                                      color: Colors.blue),
-                                  BalanceInfo(
-                                      name: 'Crédito disponível',
-                                      balance: financialResultsCalculator.creditCardBalance
-                                          .toDouble(),
-                                      icon: Icons.credit_card,
-                                      color: Colors.blue),
-                                ].map((e) => BalanceBoxInfo(
-                                  balanceInfo: e,
-                                ))
+                                Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: PerfilWidget()),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Junho',style: TextStyle(fontWeight: FontWeight.w500),),
+                                    SizedBox(width: 10,),
+                                    Icon(Icons.keyboard_arrow_down)
+                                  ],
+                                ),
+
                               ],
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32.0),
+                            child: SizedBox(
+                              child: GridView.count(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 3,
+                                children: [
+                                  ...[
+                                    BalanceInfo(
+                                        name: 'Entrada',
+                                        balance:
+                                        financialResultsCalculator.inputsBalance.toDouble(),
+                                        icon: Icons.arrow_downward,
+                                        color: Colors.green),
+                                    BalanceInfo(
+                                        name: 'Saída',
+                                        balance: financialResultsCalculator.outputsBalance
+                                            .toDouble(),
+                                        icon: Icons.arrow_upward,
+                                        color: Colors.red),
+                                    BalanceInfo(
+                                        name: 'Poupança',
+                                        balance: financialResultsCalculator.savingsBalance
+                                            .toDouble(),
+                                        icon: Icons.savings,
+                                        color: Colors.blue),
+                                    BalanceInfo(
+                                        name: 'Crédito disponível',
+                                        balance: financialResultsCalculator.creditCardBalance
+                                            .toDouble(),
+                                        icon: Icons.credit_card,
+                                        color: Colors.blue),
+                                  ].map((e) => BalanceBoxInfo(
+                                    balanceInfo: e,
+                                  ))
+                                ],
+                              ),
                             ),
                           ),
                         ],

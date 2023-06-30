@@ -14,8 +14,7 @@ class BillingItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 16.0),
-      height: 238,
+      margin: const EdgeInsets.symmetric(vertical: 16.0),
       decoration: ShapeDecoration(
           color: const Color(0xFFF5F6F9),
           shape: RoundedRectangleBorder(
