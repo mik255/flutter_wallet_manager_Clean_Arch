@@ -16,8 +16,8 @@ class PerfilWidget extends StatelessWidget {
       children: [
         Container(
           clipBehavior: Clip.antiAlias,
-          height: 80,
-          width: 80,
+          height: 65,
+          width: 65,
           decoration: ContainerDecorators().getBoxDecoration(
             color: Colors.white,
           ),

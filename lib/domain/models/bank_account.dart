@@ -42,6 +42,7 @@ class BalanceType {
   String id;
   String name;
   num balance = 0;
+  num? limit;
   BalanceTypeEnum balanceType;
   String logo;
   List<Transaction> transactions;
@@ -53,6 +54,7 @@ class BalanceType {
     required this.balanceType,
     required this.logo,
     required this.transactions,
+    required this.limit,
   });
 
   Map<String, dynamic> toMap() {
@@ -63,6 +65,7 @@ class BalanceType {
       'balanceType': balanceType.name,
       'logo': logo,
       'transactions': transactions.map((e) => e.toMap()).toList(),
+      'limit': limit,
     };
   }
 
@@ -71,6 +74,7 @@ class BalanceType {
       id: map['accountId'] as String,
       name: map['name'] as String,
       balance: map['balance'] as num,
+      limit: map['limit'] as num?,
       balanceType: BalanceTypeEnum.values.firstWhere(
           (e) => e.name == map['balanceType'] as String),
       logo: map['logo'] as String,
