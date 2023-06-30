@@ -9,7 +9,6 @@ class MainStances {
   static init() async {
     loading.value = true;
     preferences = await SharedPreferences.getInstance();
-    await plugglyService.loadData();
     loading.value = false;
   }
 

@@ -21,7 +21,6 @@ class BalanceBoxInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFFEBEDEF),
         borderRadius: BorderRadius.circular(8),
