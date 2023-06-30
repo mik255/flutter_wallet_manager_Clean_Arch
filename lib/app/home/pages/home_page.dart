@@ -5,9 +5,12 @@ import 'package:flutter_pluggy_connect/flutter_pluggy_connect.dart';
 import 'package:wallet_manager/app/home/pages/transactions_page.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
 import 'package:wallet_manager/app/home/widgets/perfil.dart';
+import 'package:wallet_manager/app/shared_widgets/balance_info.dart';
+import 'package:wallet_manager/domain/models/financial_results_calculator.dart';
 import '../../../main_stances.dart';
 import '../../styles/text_styles.dart';
 import 'loadingPage.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -19,6 +22,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool showPlugglyConnect = false;
   late TabController _tabController;
   bool menuOpened = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,8 +34,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _tabController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
+    FinancialResultsCalculator financialResultsCalculator =
+        FinancialResultsCalculator(
+            allBanks: MainStances.plugglyService.getBankAccounts.toList());
     return SafeArea(
       child: Scaffold(
         floatingActionButton: Column(
@@ -45,8 +53,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               alignment: Alignment.bottomRight,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              width: menuOpened?174:0,
-              height: menuOpened?156:0,
+              width: menuOpened ? 174 : 0,
+              height: menuOpened ? 156 : 0,
               decoration: ShapeDecoration(
                 color: const Color(0xFFF5F6F9),
                 shape: RoundedRectangleBorder(
@@ -61,45 +69,48 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   )
                 ],
               ),
-              child: menuOpened?FadeTransition(
-                opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-                  parent: AnimationController(
-                    duration: const Duration(milliseconds: 1500),
-                    vsync: this,
-                  )..forward(),
-                  curve: Curves.easeInOut,
-                )),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Wrap(
-                      runSpacing: 16,
-                      runAlignment: WrapAlignment.center,
-                      children: [
-                         InkWell(
-                           onTap: () {
-                             setState(() {
-                               showPlugglyConnect = true;
-                             });
-                           },
-                           child: Text(
-                            'Instituição financeira',
-                            style: CustomTextStyles().smallSubtitle,
+              child: menuOpened
+                  ? FadeTransition(
+                      opacity: Tween<double>(begin: 0, end: 1)
+                          .animate(CurvedAnimation(
+                        parent: AnimationController(
+                          duration: const Duration(milliseconds: 1500),
+                          vsync: this,
+                        )..forward(),
+                        curve: Curves.easeInOut,
+                      )),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Wrap(
+                            runSpacing: 16,
+                            runAlignment: WrapAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    showPlugglyConnect = true;
+                                  });
+                                },
+                                child: Text(
+                                  'Instituição financeira',
+                                  style: CustomTextStyles().smallSubtitle,
+                                ),
+                              ),
+                              Text(
+                                'Conta Periódica',
+                                style: CustomTextStyles().smallSubtitle,
+                              ),
+                              Text(
+                                'Conta Agendada',
+                                style: CustomTextStyles().smallSubtitle,
+                              ),
+                            ],
+                          ),
                         ),
-                         ),
-                         Text(
-                          'Conta Periódica',
-                          style: CustomTextStyles().smallSubtitle,
-                        ),
-                        Text(
-                          'Conta Agendada',
-                          style: CustomTextStyles().smallSubtitle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ):Container(),
+                      ),
+                    )
+                  : Container(),
             ),
             const SizedBox(height: 10),
             Row(
@@ -110,9 +121,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 const SizedBox(width: 150),
                 FloatingActionButton(
                   onPressed: () {
-                   setState(() {
-                     menuOpened = !menuOpened;
-                   });
+                    setState(() {
+                      menuOpened = !menuOpened;
+                    });
                   },
                   child: const Icon(Icons.add),
                 ),
@@ -120,126 +131,134 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ],
         ),
-        body: Builder(
-            builder: (context) {
-              if (showPlugglyConnect) {
-                return PluggyConnect(
-                  connectToken: MainStances.plugglyService.accessToken,
-                  onSuccess: (data) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                       LoadingPage(id: data['item']['id'],)));
-                    });
-
-                  },
-                  onClose: () {
-                    setState(() {
-                      showPlugglyConnect = false;
-                    });
-                  },
-                );
-              }
-              return Column(
-                children: [
-                  Container(
-                      decoration: const BoxDecoration(
-
-                        image: DecorationImage(
-                          image: AssetImage('assets/home_background.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      height: 300,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8),
-                        child: Column(
-                          children: [
-                            const PerfilWidget(),
-                            Expanded(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 100,
-                                    width: MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width * 0.8,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0, horizontal: 32),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.transparent,
-                                      border: Border.all(
-                                        color: Colors.black,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '\$ 3.248,95',
-                                        style: CustomTextStyles().title
-                                            .copyWith(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
-                  TabBar(
-                    controller: _tabController,
-                    tabs: const [
-                      Tab(text: 'Minhas Contas'),
-                      Tab(text: 'Transações'),
-                      Tab(text: 'Estatisticas'),
-                    ],
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
-                      child: TabBarView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        controller: _tabController,
-                        children: [
-                          // Conteúdo da Tab 1
-                          Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  ...List.generate(
-                                      MainStances.plugglyService.getBankAccounts
-                                          .length,
-                                          (index) =>
-                                          BillingItemWidget(
-                                              bankAccount: MainStances.plugglyService
-                                                  .getBankAccounts.toList()[index]))
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Conteúdo da Tab 2
-                          const Center(child: TransactionsPage()),
-                          // Conteúdo da Tab 3
-                          Center(child: Text('Conteúdo da Tab 3')),
-                        ],
+        body: Builder(builder: (context) {
+          if (showPlugglyConnect) {
+            return PluggyConnect(
+              connectToken: MainStances.plugglyService.accessToken,
+              onSuccess: (data) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoadingPage(
+                                id: data['item']['id'],
+                              )));
+                });
+              },
+              onClose: () {
+                setState(() {
+                  showPlugglyConnect = false;
+                });
+              },
+            );
+          }
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/home_background.png'),
+                        fit: BoxFit.cover,
                       ),
                     ),
+                    height: 300,
+                    child:  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8),
+                      child: Column(
+                        children: [
+                          const PerfilWidget(),
+                          SizedBox(
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 3,
+                              mainAxisSpacing: 3,
+                              childAspectRatio: 2,
+                              children: [
+                                ...[
+                                  BalanceInfo(
+                                      name: 'Entrada',
+                                      balance:
+                                      financialResultsCalculator.inputsBalance.toDouble(),
+                                      icon: Icons.arrow_downward,
+                                      color: Colors.green),
+                                  BalanceInfo(
+                                      name: 'Saída',
+                                      balance: financialResultsCalculator.outputsBalance
+                                          .toDouble(),
+                                      icon: Icons.arrow_upward,
+                                      color: Colors.red),
+                                  BalanceInfo(
+                                      name: 'Poupança',
+                                      balance: financialResultsCalculator.savingsBalance
+                                          .toDouble(),
+                                      icon: Icons.savings,
+                                      color: Colors.blue),
+                                  BalanceInfo(
+                                      name: 'Crédito disponível',
+                                      balance: financialResultsCalculator.creditCardBalance
+                                          .toDouble(),
+                                      icon: Icons.credit_card,
+                                      color: Colors.blue),
+                                ].map((e) => BalanceBoxInfo(
+                                  balanceInfo: e,
+                                ))
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+
+                TabBar(
+                  controller: _tabController,
+                  tabs: const [
+                    Tab(text: 'Minhas Contas'),
+                    Tab(text: 'Transações'),
+                    Tab(text: 'Estatisticas'),
+                  ],
+                ),
+                Container(
+                  height: MainStances
+                    .plugglyService.getBankAccounts.length * 350.toDouble(),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+                    child: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _tabController,
+                      children: [
+                        // Conteúdo da Tab 1
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 16),
+                          child: Column(
+                            children: [
+                              ...List.generate(
+                                  MainStances
+                                      .plugglyService.getBankAccounts.length,
+                                  (index) => BillingItemWidget(
+                                      bankAccount: MainStances
+                                          .plugglyService.getBankAccounts
+                                          .toList()[index]))
+                            ],
+                          ),
+                        ),
+                        // Conteúdo da Tab 2
+                        const Center(child: TransactionsPage()),
+                        // Conteúdo da Tab 3
+                        Center(child: Text('Conteúdo da Tab 3')),
+                      ],
+                    ),
                   ),
-                ],
-              );
-            }
-        ),
+                ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
