@@ -11,15 +11,15 @@ extension FormateDate on DateTime {
     return formatter.format(this);
   }
 
-  String formatDate() {
+  String formatDate({bool onlyDate = false}) {
     final now = DateTime.now();
     final yesterday = now.subtract(Duration(days: 1));
 
-    if (year == now.year && month == now.month && day == now.day) {
+    if (year == now.year && month == now.month && day == now.day&& !onlyDate) {
       return 'Hoje';
     } else if (year == yesterday.year &&
         month == yesterday.month &&
-        day == yesterday.day) {
+        day == yesterday.day&& !onlyDate) {
       return 'Ontem';
     } else {
       final monthNames = [
