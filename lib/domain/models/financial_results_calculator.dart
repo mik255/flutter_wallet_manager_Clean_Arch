@@ -13,8 +13,16 @@ class FinancialResultsCalculator {
   FinancialResultsCalculator({required this.allBanks}) {
     calculate();
   }
-
+ clear() {
+    inputsBalance = 0;
+    outputsBalance = 0;
+    balance = 0;
+    savingsBalance = 0;
+    creditCardBalance = 0;
+    percentageByCategories = [];
+  }
   calculate() {
+    clear();
     percentageByCategories =
         TransactionCategory.values.map((e) => {e: 0.0}).toList(growable: false);
 
@@ -43,6 +51,9 @@ class FinancialResultsCalculator {
                     logo: '',
                     transactions: [],
                     limit: null,
+                    availableLimit: 0,
+                    balanceCloseDate: '',
+                    balanceDueDate: '',
                   ))
           .balance;
       balance += element.balanceTypes
@@ -55,6 +66,9 @@ class FinancialResultsCalculator {
                     logo: '',
                     transactions: [],
                     limit: null,
+                availableLimit: 0,
+                balanceCloseDate: '',
+                balanceDueDate: '',
                   ))
           .balance;
       var credit = element.balanceTypes
@@ -67,8 +81,11 @@ class FinancialResultsCalculator {
                     logo: '',
                     transactions: [],
                     limit: null,
+                    availableLimit: 0,
+                    balanceCloseDate: '',
+                    balanceDueDate: '',
                   ));
-      creditCardBalance += (credit.limit??0) - credit.balance;
+      creditCardBalance += (credit.limit ?? 0) - credit.balance;
     }
   }
 }

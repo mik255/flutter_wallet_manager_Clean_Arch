@@ -5,7 +5,6 @@ import 'app/login/login_build.dart';
 import 'infra/preferences_helper.dart';
 import 'main_stances.dart';
 
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await MainStances.init();

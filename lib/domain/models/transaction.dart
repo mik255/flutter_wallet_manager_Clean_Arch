@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 class Transaction {
   String name;
   String date;
@@ -6,6 +9,7 @@ class Transaction {
   String bankName;
   TransactionCategory category;
   TransactionType type;
+
   Transaction({
     required this.category,
     required this.name,
@@ -15,7 +19,6 @@ class Transaction {
     required this.bankName,
     required this.type,
   });
-
 
   Map<String, dynamic> toMap() {
     return {
@@ -45,10 +48,12 @@ class Transaction {
     );
   }
 }
+
 enum TransactionType {
   CREDIT,
   DEBIT,
 }
+
 enum TransactionCategory {
   INCOME,
   LOANS_AND_FINANCING,
@@ -150,5 +155,68 @@ extension GetTransactionCategory on TransactionCategory {
         return 'Desconhecido';
     }
   }
+}
 
+extension GetTransactionIcon on TransactionCategory {
+  IconData get icon {
+    switch (this) {
+      case TransactionCategory.INCOME:
+        return Icons.attach_money;
+      case TransactionCategory.LOANS_AND_FINANCING:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.LOANS:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.INVESTMENTS:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.SAME_PERSON_TRANSFER:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.TRANSFERS:
+        return Icons.compare_arrows_sharp;
+      case TransactionCategory.CREDIT_CARD_PAYMENT:
+        return Icons.payments_outlined;
+      case TransactionCategory.LEGAL_OBLIGATIONS:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.SERVICES:
+        return Icons.miscellaneous_services;
+      case TransactionCategory.TELECOMMUNICATIONS:
+        return CupertinoIcons.phone;
+      case TransactionCategory.EDUCATION:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.WELLNESS_AND_FITNESS:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.TICKETS:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.SHOPPING:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.DIGITAL_SERVICES:
+        return Icons.computer;
+      case TransactionCategory.GROCERIES:
+        return Icons.fastfood;
+      case TransactionCategory.FOOD_AND_DRINKS:
+        return Icons.fastfood;
+      case TransactionCategory.TRAVEL:
+        return Icons.place;
+      case TransactionCategory.DONATIONS:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.GAMBLING:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.TAXES:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.BANK_FEES:
+        return Icons.currency_exchange_rounded;
+      case TransactionCategory.HOUSING:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.UTILITIES:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.HOUSEWARE:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.HEALTHCARE:
+        return CupertinoIcons.money_dollar_circle;
+      case TransactionCategory.TRANSPORTATION:
+        return CupertinoIcons.train_style_one;
+      case TransactionCategory.INSURANCE:
+      default:
+        return CupertinoIcons.money_dollar_circle;
+    }
+  }
 }

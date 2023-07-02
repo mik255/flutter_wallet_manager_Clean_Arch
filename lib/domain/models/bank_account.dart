@@ -41,8 +41,11 @@ extension GetName on BalanceTypeEnum{
 class BalanceType {
   String id;
   String name;
+  String? balanceCloseDate;
+  String? balanceDueDate;
   num balance = 0;
   num? limit;
+  num? availableLimit;
   BalanceTypeEnum balanceType;
   String logo;
   List<Transaction> transactions;
@@ -55,6 +58,9 @@ class BalanceType {
     required this.logo,
     required this.transactions,
     required this.limit,
+    required this.availableLimit,
+    required this.balanceCloseDate,
+    required this.balanceDueDate,
   });
 
   Map<String, dynamic> toMap() {
@@ -66,6 +72,9 @@ class BalanceType {
       'logo': logo,
       'transactions': transactions.map((e) => e.toMap()).toList(),
       'limit': limit,
+      'availableLimit': availableLimit,
+      'balanceCloseDate': balanceCloseDate,
+      'balanceDueDate': balanceDueDate,
     };
   }
 
@@ -75,12 +84,15 @@ class BalanceType {
       name: map['name'] as String,
       balance: map['balance'] as num,
       limit: map['limit'] as num?,
+      availableLimit: map['availableLimit'] as num?,
       balanceType: BalanceTypeEnum.values.firstWhere(
           (e) => e.name == map['balanceType'] as String),
       logo: map['logo'] as String,
       transactions: (map['transactions'] as List<dynamic>)
           .map((e) => Transaction.fromMap(e))
           .toList(),
+      balanceCloseDate: map['balanceCloseDate'] as String,
+      balanceDueDate: map['balanceDueDate'] as String,
     );
   }
 
