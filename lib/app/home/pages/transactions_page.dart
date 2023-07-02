@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
-import '../../../domain/models/transaction.dart';
 import '../../../main_stances.dart';
-
-
-List<Transaction> transactions = [];
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
@@ -15,43 +11,56 @@ class TransactionsPage extends StatefulWidget {
 
 class _TransactionsPageState extends State<TransactionsPage> {
   bool loadng = true;
+  final ScrollController _scrollController = ScrollController();
+  int page = 0;
 
   @override
   void initState() {
-    init();
+    loadMore();
+    _scrollController.addListener(_scrollListener);
     super.initState();
   }
 
-  init() async{
-
-    transactions = [];
-    for (var element in MainStances.plugglyService.getBankAccounts) {
-      element.balanceTypes
-          .map((e) => e.transactions)
-          .forEach((element) {
-            transactions.addAll(element);
-          });
-    }
-    print(transactions.length);
-    await Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        loadng = false;
-      });
+  loadMore() async {
+    page++;
+    setState(() {
+      loadng = true;
     });
+    await MainStances.plugglyService.updateTransactionsByRange(
+      MainStances.plugglyService.dataRange,
+      page,
+    );
+    setState(() {
+      loadng = false;
+    });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent&& !loadng) {
+      loadMore();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loadng) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    var transactions =  MainStances.plugglyService.getBankAccounts
+        .expand((element) => element.balanceTypes
+        .expand((element) => element.transactions))
+        .map((e) => BillingItemTransactions(transaction: e))
+        .toList();
     return SingleChildScrollView(
+      //controller: _scrollController,
       child: Wrap(
-        runSpacing: 16,
         children: [
+          if (loadng) const Center(child: LinearProgressIndicator()),
+          if(transactions.isNotEmpty)
           ...transactions
-              .map((e) => BillingItemTransactions(transaction: e))
-              .toList()
+          else
+            const Center(child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: Text('Nenhuma transação encontrada'),
+            )),
+
         ],
       ),
     );
