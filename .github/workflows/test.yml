@@ -6,49 +6,80 @@ on:
       - develop
 
 jobs:
-  flutter_test:
-    name: Run flutter test and analyze
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v1
-        with:
-          java-version: "18.x"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.10.5"
-          channel: "stable"
-      - run: flutter pub get
-      - run: flutter test
-
-  build_apk_and_push_release_tag:
-    name: Generate APK and Push Release Tag
+  build_apk_and_release:
+    name: Generate APK and Release
     needs: [flutter_test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v1
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v1
         with:
           java-version: "18.x"
-      - uses: subosito/flutter-action@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.10.5"
           channel: "stable"
-      - name: Install dependencies
+
+      - name: Install Dependencies
         run: flutter pub get
+
       - name: Build APK
         run: flutter build apk --dart-define=CLIENT_ID=${{ secrets.CLIENT_ID }} --dart-define=CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+
       - name: Create Release Tag
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git tag -a v1.0.${{ github.run_number }} -m "Release v1.0.${{ github.run_number }}"
+
       - name: Push Release Tag
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: git push origin --tags
-      - name: Upload Generated APK
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: Release v1.0.${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload APK
+        id: upload_apk
         uses: actions/upload-artifact@v2
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Get APK URL
+        id: get_apk_url
+        run: |
+          echo "::set-output name=apk_url::$(jq -r '.url' ${{ steps.upload_apk.outputs.artifact_metadata }})"
+
+      - name: Add APK to Release Assets
+        uses: actions/github-script@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          script: |
+            const release = await github.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: 'v1.0.${{ github.run_number }}'
+            });
+            await github.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.data.id,
+              name: 'app-release.apk',
+              data: fs.readFileSync('${{ steps.upload_apk.outputs.artifact_paths }}'),
+            });
