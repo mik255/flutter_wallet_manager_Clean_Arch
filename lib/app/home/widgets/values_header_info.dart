@@ -3,11 +3,16 @@ import 'package:wallet_manager/util/extensions/current_formate.dart';
 
 import '../../../domain/models/financial_results_calculator.dart';
 
-class ValuesHeaderInfo extends StatelessWidget {
+class ValuesHeaderInfo extends StatefulWidget {
   const ValuesHeaderInfo({super.key, required this.financialResultsCalculator});
 
   final FinancialResultsCalculator financialResultsCalculator;
 
+  @override
+  State<ValuesHeaderInfo> createState() => _ValuesHeaderInfoState();
+}
+
+class _ValuesHeaderInfoState extends State<ValuesHeaderInfo>  with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -26,7 +31,7 @@ class ValuesHeaderInfo extends StatelessWidget {
               ),
             ),
             Text(
-              financialResultsCalculator.balance.toCurrencyString(),
+              widget.financialResultsCalculator.balance.toCurrencyString(),
               style: const TextStyle(
                 color: Color(0xFF0C1425),
                 fontSize: 16,
@@ -37,12 +42,7 @@ class ValuesHeaderInfo extends StatelessWidget {
             _getBalance(),
           ],
         ),
-        Spacer(),
-        const Icon(
-          Icons.more_vert,
-          color: Color(0xFFB2B8C3),
-          size: 24,
-        )
+
       ],
     );
   }
@@ -80,7 +80,7 @@ class ValuesHeaderInfo extends StatelessWidget {
                 ),
                 SizedBox(
                   child: Text(
-                    financialResultsCalculator.creditCardBalance
+                    widget.financialResultsCalculator.creditCardBalance
                         .toCurrencyString(),
                     style: const TextStyle(
                       color: Color(0xFF0C1425),
@@ -126,7 +126,7 @@ class ValuesHeaderInfo extends StatelessWidget {
                 ),
                 SizedBox(
                   child: Text(
-                    financialResultsCalculator.savingsBalance
+                    widget.financialResultsCalculator.savingsBalance
                         .toCurrencyString(),
                     style: const TextStyle(
                       color: Color(0xFF0C1425),
