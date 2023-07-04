@@ -1,7 +1,7 @@
 on:
   push:
-    branches-ignore:
-      - '*'
+    branches:
+      - 'master'
 
 name: "Build & Release"
 jobs:
@@ -33,11 +33,3 @@ jobs:
           artifacts: "build/app/outputs/apk/debug/*,build/ios/iphoneos/app.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-
-
-
-# push to master, main, develop
-# pull request on main master
