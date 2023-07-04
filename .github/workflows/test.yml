@@ -6,8 +6,24 @@ on:
       - develop
 
 jobs:
-  build_apk:
-    name: Generate apk files
+  flutter_test:
+    name: Run flutter test and analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "18.x"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.10.5"
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter test
+
+  build_apk_and_push_release_tag:
+    name: Generate APK and Push Release Tag
+    needs: [flutter_test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,19 +36,19 @@ jobs:
           channel: "stable"
       - name: Install dependencies
         run: flutter pub get
-      - name: Build apk
+      - name: Build APK
         run: flutter build apk --dart-define=CLIENT_ID=${{ secrets.CLIENT_ID }} --dart-define=CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
-      - name: Create Tag
+      - name: Create Release Tag
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git tag -a v1.0.${{ github.run_number }} -m "Release v1.0.${{ github.run_number }}"
-      - name: Push Tag
+      - name: Push Release Tag
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: git push origin --tags
-      - name: Upload generated apk to artifacts
-        uses: actions/upload-artifact@v1
+      - name: Upload Generated APK
+        uses: actions/upload-artifact@v2
         with:
-          name: debug-apk
-          path: build/app/outputs/apk/debug/*
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
