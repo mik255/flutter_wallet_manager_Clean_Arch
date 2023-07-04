@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pluggy_connect/flutter_pluggy_connect.dart';
+import 'package:wallet_manager/app/home/pages/results_page.dart';
 import 'package:wallet_manager/app/home/pages/transactions_page.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
 import 'package:wallet_manager/app/home/widgets/perfil.dart';
@@ -602,7 +603,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         // Conteúdo da Tab 2
                         TransactionsPage(),
                         // Conteúdo da Tab 3
-                        Center(child: Text('Conteúdo da Tab 3')),
+                        ResultsPage(),
                       ],
                     ),
                   ),

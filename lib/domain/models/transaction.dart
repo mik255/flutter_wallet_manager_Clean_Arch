@@ -89,7 +89,7 @@ enum TransactionCategory {
 }
 
 extension GetTransactionCategory on TransactionCategory {
-  String get name {
+  String get getName {
     switch (this) {
       case TransactionCategory.INCOME:
         return 'Renda';
