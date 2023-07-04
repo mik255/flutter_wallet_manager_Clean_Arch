@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet_manager/app/home/pages/home_page.dart';
 
+import '../../../main_stances.dart';
+import '../../shared_widgets/load_lottie_widgets.dart';
 import '../../styles/container_decorators.dart';
 import '../../view_models/user_viewmodel.dart';
 
@@ -51,7 +54,50 @@ class PerfilWidget extends StatelessWidget {
         ),
         const Spacer(),
         InkWell(
-            onTap: onTap,
+            onTap: () {
+              MainStances.plugglyService.updateAllItem();
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                              body: AnimatedBuilder(
+                            animation:
+                                MainStances.plugglyService.loadingUpdating,
+                            builder: (context, child) {
+                              if (MainStances
+                                  .plugglyService.loadingUpdating.value) {
+                                return Scaffold(
+                                  backgroundColor: Colors.white,
+                                  bottomNavigationBar: Container(
+                                    height: 100,
+                                    child: const Text(
+                                      'Atualizando dados... \n pode demorar alguns minutos ',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  body: const Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        LottieLoader(
+                                          animationPath:
+                                              'assets/animations/updating.json',
+                                          fit: BoxFit.cover,
+                                          loop: true,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return const HomePage(
+                                  needLoadData: false,
+                                );
+                              }
+                            },
+                          ))));
+            },
             child: const Text('atualizar',
                 style: TextStyle(
                   color: Colors.black,

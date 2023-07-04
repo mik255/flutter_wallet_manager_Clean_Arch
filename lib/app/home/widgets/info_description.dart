@@ -5,24 +5,34 @@ class InfoDescriptionWidget extends StatelessWidget {
     super.key,
     required this.title,
     required this.description,
+    required this.rightWidget,
   });
 
   final String title;
   final String description;
+  final Widget rightWidget;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Color(0xFF0C1425),
-            fontSize: 16,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-          ),
+        Row(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF0C1425),
+                fontSize: 16,
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            rightWidget,
+          ],
         ),
         SizedBox(
           height: 8,
