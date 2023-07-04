@@ -39,11 +39,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Build apk and Push to Releases
-        run: flutter build apk --split-per-abi --release
+        env:
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        run: flutter build apk --dart-define=CLIENT_ID=${CLIENT_ID} --dart-define=CLIENT_SECRET=${CLIENT_SECRET}
       # Upload generated apk to the artifacts.
       - name:
           uses: ncipollo/release-action@v1
           with:
             artifacts: "build/app/outputs/apk/debug/*,build/ios/iphoneos/app.ipa"
             tag: v1.0.${{ github.run_number }}
-            token: ${{ secrets.TOKEN }}
+            token: ${{ secrets.RELEASE_TOKEN }}
