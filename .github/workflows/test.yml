@@ -42,7 +42,7 @@ jobs:
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         run: flutter build apk --dart-define=CLIENT_ID=${CLIENT_ID} --dart-define=CLIENT_SECRET=${CLIENT_SECRET}
       - name: Upload generated apk to artifacts
-      - uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v1
         with:
           name: release-apk
           path: build/app/outputs/apk/release/app-release.apk
