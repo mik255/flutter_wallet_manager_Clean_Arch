@@ -44,11 +44,11 @@ jobs:
           git config --local user.name "GitHub Actions"
           git tag -a v1.0.${{ github.run_number }} -m "Release v1.0.${{ github.run_number }}"
       - name: Push Tag
-        token: ${{ secrets.RELEASE_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: git push origin --tags
       - name: Upload generated apk to artifacts
         uses: actions/upload-artifact@v1
         with:
           name: release-apk
           path: build/app/outputs/apk/debug/app-debug.apk
-
