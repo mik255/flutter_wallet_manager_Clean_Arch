@@ -18,7 +18,7 @@ jobs:
           flutter-version: '3.10.5'
       - run: flutter pub get
       - run: flutter test
-      - run: flutter build apk --debug --split-per-abi
+      - run: flutter build apk --debug --split-per-abi --dart-define=CLIENT_ID=${{ secrets.CLIENT_ID }} --dart-define=CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
       - run: |
           flutter build ios --no-codesign
           cd build/ios/iphoneos
@@ -32,7 +32,7 @@ jobs:
         with:
           artifacts: "build/app/outputs/apk/debug/*,build/ios/iphoneos/app.ipa"
           tag: v1.0.${{ github.run_number }}
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
 
 
