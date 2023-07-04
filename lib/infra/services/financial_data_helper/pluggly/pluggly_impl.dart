@@ -21,6 +21,8 @@ class PlugglyService implements FinancialDataHelperService {
     end: DateTime.now(),
   );
 
+  ValueNotifier<bool> loadingUpdating = ValueNotifier<bool>(false);
+
   loadData() async {
     Platform.environment.forEach((key, value) {
       print('$key: $value');
@@ -52,9 +54,17 @@ class PlugglyService implements FinancialDataHelperService {
 
     accessToken = accessTokenResponse.data['accessToken'];
 
+    await getAllAccounts();
+  }
+
+  Future<void> getAllAccounts() async {
+    getBankAccounts = {};
+    cacheItems = {};
+    List<String> items = prefs!.getStringList('items')?.toList() ?? [];
     var result = await Future.wait([
-      ...cacheItems.map((e) => getAccount(e)),
+      ...items.map((e) => getAccount(e)),
     ]);
+    await prefs!.setStringList('items', cacheItems.toList());
     getBankAccounts = result.toSet();
   }
 
@@ -78,19 +88,19 @@ class PlugglyService implements FinancialDataHelperService {
       {DateTimeRange? range, int page = 1, int limit = 500}) async {
     dataRange = range ?? dataRange;
     List<Transaction> transactions = [];
-    int length =-1;
-    while(length<transactions.length){
+    int length = -1;
+    while (length < transactions.length) {
       length = transactions.length;
       var response = await dio.get(
         '$baseUrl/transactions?accountId=${balanceType.id}',
         queryParameters: range == null
             ? null
             : {
-          'from': range.start.toIso8601String(),
-          'to': range.end.toIso8601String(),
-          'page': page,
-          'pageSize': limit
-        },
+                'from': range.start.toIso8601String(),
+                'to': range.end.toIso8601String(),
+                'page': page,
+                'pageSize': limit
+              },
         options: Options(
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
@@ -101,25 +111,25 @@ class PlugglyService implements FinancialDataHelperService {
       var data = response.data['results'] as List<dynamic>;
       transactions.addAll(balanceType.transactions = (data)
           .map((e) => Transaction(
-        name: e['description'],
-        date: e['date'],
-        amount: e['amount'],
-        installments: e['creditCardMetadata'] == null
-            ? '' // case true, transaction have no installments
-            : e['creditCardMetadata']['installmentNumber'] +
-            '/' +
-            e['creditCardMetadata']['totalInstallments'],
-        bankName: '',
-        type: TransactionType.values.firstWhere(
-                (element) => element.name == e['type'],
-            orElse: () => TransactionType.DEBIT),
-        category: getCategory(e['category']),
-      ))
+                name: e['description'],
+                date: e['date'],
+                amount: e['amount'],
+                installments: e['creditCardMetadata'] == null
+                    ? '' // case true, transaction have no installments
+                    : e['creditCardMetadata']['installmentNumber'] +
+                        '/' +
+                        e['creditCardMetadata']['totalInstallments'],
+                bankName: '',
+                type: TransactionType.values.firstWhere(
+                    (element) => element.name == e['type'],
+                    orElse: () => TransactionType.DEBIT),
+                category: getCategory(e['category']),
+              ))
           .toList());
       page++;
     }
     print('transactions: ${transactions.length}');
-     return balanceType.transactions = transactions;
+    return balanceType.transactions = transactions;
   }
 
   Future<BankAccount> getAccount(String itemId) async {
@@ -132,8 +142,9 @@ class PlugglyService implements FinancialDataHelperService {
         },
       ),
     );
-    var listBalances = await Future.wait(
-        (response.data['results'] as List<dynamic>).map((e) async {
+    var list = response.data['results'] as List<dynamic>;
+
+    var listBalances = await Future.wait(list.map((e) async {
       var balanceType = BalanceType(
         balanceCloseDate: e['creditData']?['balanceCloseDate'],
         balanceDueDate: e['creditData']?['balanceDueDate'],
@@ -149,14 +160,13 @@ class PlugglyService implements FinancialDataHelperService {
         transactions: [],
       );
       await _getTransactions(balanceType, page: 1, range: dataRange);
+      cacheItems.add(itemId);
       return balanceType;
     }).toList());
     var account = BankAccount(
       balanceTypes: listBalances,
     );
     getBankAccounts.add(account);
-    cacheItems.add(itemId);
-    await prefs!.setStringList('items', cacheItems.toList());
     return account;
   }
 
@@ -202,7 +212,8 @@ class PlugglyService implements FinancialDataHelperService {
       'Transfer - TED'
     ].contains(category)) {
       return TransactionCategory.TRANSFERS;
-    } else if (['Credit card payment','Transfers','Same person transfer'].contains(category)) {
+    } else if (['Credit card payment', 'Transfers', 'Same person transfer']
+        .contains(category)) {
       return TransactionCategory.CREDIT_CARD_PAYMENT;
     } else if (['Blocked balances', 'Alimony'].contains(category)) {
       return TransactionCategory.LEGAL_OBLIGATIONS;
@@ -239,7 +250,7 @@ class PlugglyService implements FinancialDataHelperService {
       'Cashback'
     ].contains(category)) {
       return TransactionCategory.SHOPPING;
-    } else if (['Gaming', 'Video streaming', 'Music streaming','Shopping']
+    } else if (['Gaming', 'Video streaming', 'Music streaming', 'Shopping']
         .contains(category)) {
       return TransactionCategory.DIGITAL_SERVICES;
     } else if (['Eating out', 'Food delivery'].contains(category)) {
@@ -304,4 +315,52 @@ class PlugglyService implements FinancialDataHelperService {
     }
   }
 
+  Future<void> updateAllItem() async {
+    loadingUpdating.value=true;
+    List<String> sendRequestAndGetUpdateItemsId = await Future.wait(cacheItems.map((e) async {
+      return updateItem(e);
+    }).toList());
+    List<String> itemsId = sendRequestAndGetUpdateItemsId;
+    var response = await Future.wait(
+      itemsId.map((e) async {
+        return updatingItemById(e);
+      }).toList(),
+    );
+    await prefs!.setStringList(
+        'items', response.map((e) => e.data['id'] as String).toList());
+    await getAllAccounts();
+    loadingUpdating.value=false;
+  }
+
+  Future<Response> updatingItemById(String itemId) async {
+    var response = await dio.get(
+      '$baseUrl/items/$itemId',
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "X-API-KEY": apiKey,
+        },
+      ),
+    );
+    //semaforo para esperar a atualização do item
+    if (response.data['status'] == 'UPDATING') {
+      await Future.delayed(const Duration(seconds: 2));
+      await updatingItemById(itemId);
+    }
+    return response;
+  }
+
+  Future<String> updateItem(String itemId) async {
+    var response = await dio.patch(
+      '$baseUrl/items/$itemId',
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "X-API-KEY": apiKey,
+        },
+      ),
+    );
+
+    return response.data['id'];
+  }
 }
