@@ -16,9 +16,9 @@ import '../widgets/radial_pie_chart.dart';
 
 Color randomColor() {
   final Random random = Random();
-  final int r = 80 + random.nextInt(80); // Intervalo de vermelho: 80-255
-  final int g = 80 + random.nextInt(80); // Intervalo de verde: 80-255
-  final int b = 80 + random.nextInt(80); // Intervalo de azul: 80-255
+  final int r = random.nextInt(255); // Intervalo de vermelho: 80-255
+  final int g = random.nextInt(255); // Intervalo de verde: 80-255
+  final int b = random.nextInt(255); // Intervalo de azul: 80-255
   return Color.fromRGBO(
       r, g, b, 0.6);
 }
@@ -28,16 +28,19 @@ const String resultsTitle =
 
 String getName(Transaction transaction,bool isMainCategory) {
   if(isMainCategory){
-    return transaction.category.getName;
+    return transaction.category.category;
   }
   String title = transaction.name;
-  try {
-    title = transaction.name.split('-')[0];
-  } catch (e) {}
+
   return title;
 }
 
- TransactionType type = TransactionType.DEBIT;
+TransactionType type = TransactionType.DEBIT;
+List<String> removeList = [
+  'Dinheiro guardado',
+  'Dinheiro resgatado',
+  'Movimentação de Saldo',
+];
 Future<List<Map<String, dynamic>>> _computeResult(Set<BankAccount> list) async {
   try {
     var allItems = list
@@ -51,7 +54,7 @@ Future<List<Map<String, dynamic>>> _computeResult(Set<BankAccount> list) async {
             })
         .toSet();
     allItems.removeWhere((element) => element['value'] == 0);
-    allItems.removeWhere((element) => ['Dinheiro guardado','Dinheiro resgatado'].contains(element['name']));
+    allItems.removeWhere((element) => removeList.contains(element['name']));
     var total = allItems.map((e) => e['value'] as num).reduce((value, element) => value + element);
 
     var resultNames = allItems.map((e) => e['name']).toSet();
@@ -71,6 +74,7 @@ Future<List<Map<String, dynamic>>> _computeResult(Set<BankAccount> list) async {
                   (total == 0 ? 1 : total),
             })
         .toList();
+
     return resultValues;
   } catch (e) {
     return [];
@@ -89,49 +93,52 @@ class _ResultsPageState extends State<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: FutureBuilder(
-          future:
-              compute(_computeResult, MainStances.plugglyService.getBankAccounts),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-               return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        Text('calculando...'),
-                      ],
-                    ),
-                  ));
-            } else if (snapshot.hasError) {
-              print(snapshot.error);
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-            var resultValues = snapshot.data!;
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  _categoryResultsCardHeader(),
-                  _radialChart(resultValues),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  //   child: InputAndOutputCard(
-                  //     financialResultsCalculator: financialResultsCalculator,
-                  //   ),
-                  // ),
-                  SizedBox(
-                    height: 300,
-                  )
-                ],
-              ),
-            );
-          }),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _categoryResultsCardHeader(),
+            FutureBuilder(
+                future: _computeResult(MainStances.plugglyService.getBankAccounts),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                     return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              Text('calculando...'),
+                            ],
+                          ),
+                        ));
+                  } else if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  var resultValues = snapshot.data!;
+                  return Column(
+                    children: [
+
+                      _radialChart(resultValues),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      //   child: InputAndOutputCard(
+                      //     financialResultsCalculator: financialResultsCalculator,
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: 300,
+                      )
+                    ],
+                  );
+                }),
+          ],
+        ),
+      ),
     );
   }
 
@@ -163,6 +170,18 @@ class _ResultsPageState extends State<ResultsPage> {
     data = data.map((e) => e..['color'] = randomColor()).toList();
     return RadialChartWidget(
       data: data,
+      listUnbled: removeList,
+      onItemTap: (title) {
+        setState(() {
+          if(removeList.contains(title)){
+            removeList.remove(title);
+            return;
+          }
+          removeList.add(title);
+          removeList.toSet().toList();
+        });
+
+      },
     );
   }
 }

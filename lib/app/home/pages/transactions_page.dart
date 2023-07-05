@@ -44,7 +44,11 @@ class TransactionsPage extends StatefulWidget {
 class _TransactionsPageState extends State<TransactionsPage> {
 
   int page = 0;
-
+  @override
+  void initState() {
+    _searchController.text = '';
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(

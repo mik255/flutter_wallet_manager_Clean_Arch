@@ -23,8 +23,13 @@ class FinancialResultsCalculator {
   }
   calculate() {
     clear();
-    percentageByCategories =
-        TransactionCategory.values.map((e) => {e: 0.0}).toList(growable: false);
+    percentageByCategories = allBanks
+        .expand((element) => element.balanceTypes)
+        .expand((element) => element.transactions)
+        .map((e) => e.category)
+        .toSet()
+        .map((e) => {e: 0.0})
+        .toList();
 
     for (var element in allBanks) {
       element.balanceTypes.map((e) => e.transactions).forEach((element) {

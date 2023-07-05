@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet_manager/app/home/pages/results_page.dart';
 import 'package:wallet_manager/util/extensions/current_formate.dart';
 import 'package:wallet_manager/util/extensions/formate_date.dart';
 import '../../../domain/models/bank_account.dart';
@@ -377,7 +378,7 @@ class BillingItemTransactions extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                           ),
                         ),Text(
-                        transaction.category.getName,
+                        transaction.category.category,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -390,7 +391,7 @@ class BillingItemTransactions extends StatelessWidget {
                       Text(
                         transaction.amount.abs().toCurrencyString(withSymbol: false),
                         style:  TextStyle(
-                          color: transaction.amount>0?Colors.green:Colors.red,
+                          color: transaction.amount>0||transaction.type==TransactionType.CREDIT?Colors.green:Colors.red,
                           fontSize: 14,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
