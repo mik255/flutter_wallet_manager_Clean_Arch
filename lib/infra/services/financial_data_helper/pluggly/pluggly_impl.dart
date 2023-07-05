@@ -171,6 +171,7 @@ class PlugglyService implements FinancialDataHelperService {
   }
 
   TransactionCategory getCategory(String? category) {
+
     if ([
       'Salary',
       'Retirement',
@@ -209,10 +210,12 @@ class PlugglyService implements FinancialDataHelperService {
       'Transfer - Foreign exchange',
       'Transfer - Internal',
       'Transfer - PIX',
-      'Transfer - TED'
+      'Transfer - TED',
+      'Transfers',
+      'Same person transfer'
     ].contains(category)) {
       return TransactionCategory.TRANSFERS;
-    } else if (['Credit card payment', 'Transfers', 'Same person transfer']
+    } else if (['Credit card payment' ]
         .contains(category)) {
       return TransactionCategory.CREDIT_CARD_PAYMENT;
     } else if (['Blocked balances', 'Alimony'].contains(category)) {
@@ -221,7 +224,8 @@ class PlugglyService implements FinancialDataHelperService {
       'Telecommunications',
       'Education',
       'Wellness and fitness',
-      'Tickets'
+      'Tickets',
+      'Internet', 'Mobile', 'TV'
     ].contains(category)) {
       return TransactionCategory.SERVICES;
     } else if (['Internet', 'Mobile', 'TV'].contains(category)) {
@@ -252,7 +256,7 @@ class PlugglyService implements FinancialDataHelperService {
       return TransactionCategory.SHOPPING;
     } else if (['Gaming', 'Video streaming', 'Music streaming', 'Shopping']
         .contains(category)) {
-      return TransactionCategory.DIGITAL_SERVICES;
+      return TransactionCategory.FOOD_AND_DRINKS;
     } else if (['Eating out', 'Food delivery'].contains(category)) {
       return TransactionCategory.GROCERIES;
     } else if ([
@@ -310,7 +314,6 @@ class PlugglyService implements FinancialDataHelperService {
     } else if (['Leisure'].contains(category)) {
       return TransactionCategory.LEISURE;
     } else {
-      print(category);
       return TransactionCategory.OTHERS;
     }
   }

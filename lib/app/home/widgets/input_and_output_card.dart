@@ -36,28 +36,14 @@ class _InputAndOutputCardState extends State<InputAndOutputCard> {
             ),
           ]),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DateRangePickerWidget(
-                  onDateSelected: (range) async {
-                    setState(() {
-                      loading = true;
-                    });
-                    await MainStances.plugglyService.updateTransactionsByRange(
-                      range,
-                      1,
-                      limit: 500,
-                    );
-                    widget.financialResultsCalculator.calculate();
-                    setState(() {
-                      currentDateRange = range;
-                      loading = false;
-                    });
-                  },
-                  initialDate: currentDateRange),
-              const Spacer(),
               if (loading)
                 Container(
                   height: 16,
@@ -72,135 +58,131 @@ class _InputAndOutputCardState extends State<InputAndOutputCard> {
                 )
             ],
           ),
-          const SizedBox(
-            height: 16,
-          ),
-          Wrap(
-            runSpacing: 16,
-            spacing: 16,
-            alignment: WrapAlignment.start,
-            crossAxisAlignment: WrapCrossAlignment.start,
-            runAlignment: WrapAlignment.start,
+          Row(
             children: [
-              SizedBox(
-                  child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: ShapeDecoration(
-                  color: Color(0xFFF8F8F8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: const ShapeDecoration(
-                        color: Colors.green,
-                        shape: OvalBorder(),
-                      ),
-                      child: const Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 12,
-                      ),
+              Expanded(
+                child: SizedBox(
+                    child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF8F8F8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          child: Text(
-                            'Entrada',
-                            style: TextStyle(
-                              color: Color(0xFF505869),
-                              fontSize: 13,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          child: Text(
-                            widget.financialResultsCalculator.inputsBalance
-                                .toCurrencyString(),
-                            style: const TextStyle(
-                              color: Color(0xFF0C1425),
-                              fontSize: 14,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )),
-              SizedBox(
-                  child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: ShapeDecoration(
-                  color: Color(0xFFF8F8F8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
+                  child: Wrap(
+                    children: [
+                      Container(
                         width: 24,
                         height: 24,
                         decoration: const ShapeDecoration(
-                          color: Colors.red,
+                          color: Colors.green,
                           shape: OvalBorder(),
                         ),
                         child: const Icon(
-                          Icons.arrow_downward,
+                          Icons.arrow_upward,
                           color: Colors.white,
                           size: 12,
-                        )),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          child: Text(
-                            'Saída',
-                            style: TextStyle(
-                              color: Color(0xFF505869),
-                              fontSize: 13,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                         ),
-                        SizedBox(
-                          child: Text(
-                            widget.financialResultsCalculator.outputsBalance
-                                .toCurrencyString(),
-                            style: const TextStyle(
-                              color: Color(0xFF0C1425),
-                              fontSize: 14,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w500,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            child: Text(
+                              'Entrada',
+                              style: TextStyle(
+                                color: Color(0xFF505869),
+                                fontSize: 13,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )),
+                          SizedBox(
+                            child: Text(
+                              widget.financialResultsCalculator.inputsBalance
+                                  .toCurrencyString(),
+                              style: const TextStyle(
+                                color: Color(0xFF0C1425),
+                                fontSize: 14,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+              ),
+              const SizedBox(
+                width: 8,),
+              Expanded(
+                child: SizedBox(
+                    child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  decoration: ShapeDecoration(
+                    color: Color(0xFFF8F8F8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Wrap(
+                    children: [
+                      Container(
+                          width: 24,
+                          height: 24,
+                          decoration: const ShapeDecoration(
+                            color: Colors.red,
+                            shape: OvalBorder(),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.white,
+                            size: 12,
+                          )),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            child: Text(
+                              'Saída',
+                              style: TextStyle(
+                                color: Color(0xFF505869),
+                                fontSize: 13,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Text(
+                              widget.financialResultsCalculator.outputsBalance
+                                  .toCurrencyString(),
+                              style: const TextStyle(
+                                color: Color(0xFF0C1425),
+                                fontSize: 14,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+              ),
             ],
           ),
         ],

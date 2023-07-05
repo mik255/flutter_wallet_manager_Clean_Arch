@@ -1,12 +1,39 @@
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
-import 'package:wallet_manager/domain/models/transaction.dart';
+import '../../../domain/models/financial_results_calculator.dart';
 import '../../../main_stances.dart';
-import '../../shared_widgets/date_rage_piker.dart';
+import '../widgets/info_description.dart';
+import '../widgets/input_and_output_card.dart';
 
-ValueNotifier<List<BillingItemTransactions>> transactions =
-    ValueNotifier<List<BillingItemTransactions>>([]);
 TextEditingController _searchController = TextEditingController();
+
+class ComputeValues {
+  ValueNotifier<List<BillingItemTransactions>> transactions;
+  List<BillingItemTransactions> allTransactions;
+  FinancialResultsCalculator financialResultsCalculator;
+
+  ComputeValues(
+      {required this.transactions,
+      required this.financialResultsCalculator,
+      required this.allTransactions});
+}
+
+Future<ComputeValues> computeCalcuc(ComputeValues computeValues) async {
+  await Future.delayed(const Duration(milliseconds: 200));
+  computeValues.transactions.value = MainStances.plugglyService.getBankAccounts
+      .expand((element) =>
+          element.balanceTypes.expand((element) => element.transactions))
+      .map((e) => BillingItemTransactions(transaction: e))
+      .toList();
+
+  computeValues.financialResultsCalculator = FinancialResultsCalculator(
+    allBanks: MainStances.plugglyService.getBankAccounts.toList(),
+  );
+  return computeValues;
+}
+
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
 
@@ -15,106 +42,159 @@ class TransactionsPage extends StatefulWidget {
 }
 
 class _TransactionsPageState extends State<TransactionsPage> {
-  bool loadng = true;
-  final ScrollController _scrollController = ScrollController();
+
   int page = 0;
 
   @override
-  void initState() {
-    loadMore();
-    _scrollController.addListener(_scrollListener);
-    super.initState();
-  }
-
-  loadMore() async {
-    page++;
-    setState(() {
-      loadng = true;
-    });
-    await MainStances.plugglyService.updateTransactionsByRange(
-      MainStances.plugglyService.dataRange,
-      page,
-    );
-    setState(() {
-      loadng = false;
-    });
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !loadng) {
-      loadMore();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    transactions.value = MainStances.plugglyService.getBankAccounts
-        .expand((element) =>
-            element.balanceTypes.expand((element) => element.transactions))
-        .map((e) => BillingItemTransactions(transaction: e))
-        .toList();
-    var allTransactions = transactions.value;
     return AnimatedBuilder(
-      animation: transactions,
-      builder: (context, child) => SingleChildScrollView(
-        //controller: _scrollController,
-        child: Wrap(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Expanded(child: SearchWidget()),
-                ],
-              ),
-            ),
-            if (loadng) const Center(child: LinearProgressIndicator()),
-            if (transactions.value.isNotEmpty)
-              Column(
-                children: [
-                  ...transactions.value,
-                  const SizedBox(
-                    height: 300,
-                  )
-                ],
-              )
-            else
-              Center(
-                  child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Builder(builder: (context) {
-                  if (loadng) {
-                    return const Center(child: Text('carregando...'));
-                  }
-                  return Center(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                        const Text('Nenhuma transação encontrada'),
-                        const SizedBox(height: 16),
-                        if(allTransactions.isNotEmpty)
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _searchController.text = '';
-                            });
-                          },
-                          child: const Text('resetar pesquisa'),
+        animation: MainStances.loading,
+        builder: (context, child) {
+          if (MainStances.loading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return FutureBuilder<ComputeValues>(
+              future: computeCalcuc(
+                  ComputeValues(
+                      transactions: ValueNotifier<List<BillingItemTransactions>>([]),
+                      financialResultsCalculator:  FinancialResultsCalculator(
+                        allBanks: MainStances.plugglyService.getBankAccounts.toList(),
+                      ),
+                    allTransactions: [],
+                  )),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                      child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 16.0,
                         ),
-                      ]));
-                }),
-              )),
-          ],
-        ),
-      ),
-    );
+                        Text('calculando...'),
+                      ],
+                    ),
+                  ));
+                }
+                var allTransactions = snapshot.data!.allTransactions;
+                return AnimatedBuilder(
+                  animation: snapshot.data!.transactions,
+                  builder: (context, child) => SingleChildScrollView(
+                    //controller: _scrollController,
+                    child: Wrap(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InfoDescriptionWidget(
+                                title: 'Entradas e Saídas',
+                                description:
+                                    'Estes valores correspontem ao somatório do fluxo de entrada e saída de todas  as contas',
+                                rightWidget: Container(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16.0, horizontal: 16.0),
+                          child: InputAndOutputCard(
+                            financialResultsCalculator:
+                                snapshot.data!.financialResultsCalculator,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: SearchWidget(
+                                    transactions: snapshot.data!.transactions,
+                                  )),
+                                ],
+                              ),
+                              if (snapshot.data!.transactions.value.length <
+                                  allTransactions.length)
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _searchController.text = '';
+                                    });
+                                  },
+                                  child: const Text('Resetar pesquisa'),
+                                ),
+                            ],
+                          ),
+                        ),
+                        if (MainStances.loading.value)
+                          const Center(child: LinearProgressIndicator()),
+                        if (snapshot.data!.transactions.value.isNotEmpty)
+                          Column(
+                            children: [
+                              ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return snapshot
+                                      .data!.transactions.value[index];
+                                },
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    snapshot.data!.transactions.value.length,
+                              ),
+                              const SizedBox(
+                                height: 300,
+                              )
+                            ],
+                          )
+                        else
+                          Center(
+                              child: Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: Builder(builder: (context) {
+                              if (MainStances.loading.value) {
+                                return const Center(
+                                    child: Text('carregando...'));
+                              }
+                              return Center(
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                    const Text('Nenhuma transação encontrada'),
+                                    const SizedBox(height: 16),
+                                    if (allTransactions.isNotEmpty)
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _searchController.text = '';
+                                          });
+                                        },
+                                        child: const Text('resetar pesquisa'),
+                                      ),
+                                  ]));
+                            }),
+                          )),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        });
   }
 }
 
 class SearchWidget extends StatelessWidget {
-  const SearchWidget({super.key});
+  const SearchWidget({super.key, required this.transactions});
+
+  final ValueNotifier<List<BillingItemTransactions>> transactions;
 
   @override
   Widget build(BuildContext context) {

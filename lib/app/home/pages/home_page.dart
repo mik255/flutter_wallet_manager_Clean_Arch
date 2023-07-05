@@ -72,56 +72,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             allBanks: MainStances.plugglyService.getBankAccounts.toList());
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: BottomAppBar(
-          height: 60,
-          elevation: 0,
-          child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _tabController.index = 0;
-                    });
-                  },
-                  icon: Icon(
-                    Icons.home,
-                    color: _tabController.index == 0
-                        ? const Color(0xFF2D9CDB)
-                        : const Color(0xFFBDBDBD),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _tabController.index = 1;
-                    });
-                  },
-                  icon: Icon(
-                    Icons.add_card_rounded,
-                    color: _tabController.index == 1
-                        ? const Color(0xFF2D9CDB)
-                        : const Color(0xFFBDBDBD),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _tabController.index = 2;
-                    });
-                  },
-                  icon: Icon(
-                    Icons.person,
-                    color: _tabController.index == 2
-                        ? const Color(0xFF2D9CDB)
-                        : const Color(0xFFBDBDBD),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
         body: Builder(builder: (context) {
           if (loading) {
             return const Center(
@@ -173,53 +123,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           horizontal: 16.0, vertical: 8),
                       child: Column(
                         children: [
-                          // SizedBox(
-                          //   width: MediaQuery.of(context).size.width,
-                          //   child: Stack(
-                          //     alignment: Alignment.center,
-                          //     children: [
-                          //       const Align(
-                          //           alignment: Alignment.centerLeft,
-                          //           child: PerfilWidget()),
-                          //       DateRangePickerWidget(
-                          //         initialDate:
-                          //             MainStances.plugglyService.dataRange,
-                          //         onDateSelected: (date) async {
-                          //           setState(() {
-                          //             loading = true;
-                          //           });
-                          //           await MainStances.plugglyService
-                          //               .updateTransactionsByRange(date, 1);
-                          //           setState(() {
-                          //             loading = false;
-                          //           });
-                          //         },
-                          //       ),
-                          //       Align(
-                          //         alignment: Alignment.centerRight,
-                          //         child: InkWell(
-                          //             onTap: () async {
-                          //               setState(() {
-                          //                 loading = true;
-                          //               });
-                          //               await MainStances.plugglyService
-                          //                   .updateTransactionsByRange(
-                          //                       MainStances
-                          //                           .plugglyService.dataRange,
-                          //                       1);
-                          //               setState(() {
-                          //                 loading = false;
-                          //               });
-                          //             },
-                          //             child: const Padding(
-                          //               padding: EdgeInsets.all(8.0),
-                          //               child: Icon(Icons.refresh),
-                          //             )),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                          // balance widget
                           Row(
                             children: [
                               Expanded(
@@ -251,53 +154,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ],
                           ),
 
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(vertical: 32.0),
-                          //   child: SizedBox(
-                          //     child: GridView.count(
-                          //       shrinkWrap: true,
-                          //       physics: const NeverScrollableScrollPhysics(),
-                          //       crossAxisCount: 2,
-                          //       crossAxisSpacing: 16,
-                          //       mainAxisSpacing: 16,
-                          //       childAspectRatio: 3,
-                          //       children: [
-                          //         ...[
-                          //           BalanceInfo(
-                          //               name: 'Entrada',
-                          //               balance: financialResultsCalculator
-                          //                   .inputsBalance
-                          //                   .toDouble(),
-                          //               icon: Icons.arrow_downward,
-                          //               color: Colors.green),
-                          //           BalanceInfo(
-                          //               name: 'Saída',
-                          //               balance: financialResultsCalculator
-                          //                   .outputsBalance
-                          //                   .toDouble(),
-                          //               icon: Icons.arrow_upward,
-                          //               color: Colors.red),
-                          //           BalanceInfo(
-                          //               name: 'Poupança',
-                          //               balance: financialResultsCalculator
-                          //                   .savingsBalance
-                          //                   .toDouble(),
-                          //               icon: Icons.savings,
-                          //               color: Colors.blue),
-                          //           BalanceInfo(
-                          //               name: 'Crédito disponível',
-                          //               balance: financialResultsCalculator
-                          //                   .creditCardBalance
-                          //                   .toDouble(),
-                          //               icon: Icons.credit_card,
-                          //               color: Colors.blue),
-                          //         ].map((e) => BalanceBoxInfo(
-                          //               balanceInfo: e,
-                          //             ))
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     )),
@@ -306,7 +162,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   tabs: const [
                     Tab(text: 'Minhas Contas'),
                     Tab(text: 'Transações'),
-                    Tab(text: 'Estatisticas'),
+                    Tab(text: 'Resultados'),
                   ],
                 ),
                 Container(
@@ -323,9 +179,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0, vertical: 8),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                  Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                   mainAxisAlignment: MainAxisAlignment.start,
+                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InfoDescriptionWidget(
                                       title: 'Entradas e Saídas',
