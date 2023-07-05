@@ -20,33 +20,7 @@ class Transaction {
     required this.type,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'date': date,
-      'amount': amount,
-      'installments': installments,
-      'bankName': bankName,
-      'category': category.name,
-      'type': type == TransactionType.CREDIT ? 'CREDIT' : 'DEBIT',
-    };
-  }
 
-  factory Transaction.fromMap(Map<String, dynamic> map) {
-    return Transaction(
-      category: TransactionCategory.values.firstWhere(
-          (element) => element.name == map['category'],
-          orElse: () => TransactionCategory.OTHERS),
-      name: map['name'] as String,
-      date: map['date'] as String,
-      amount: map['amount'] as num,
-      installments: map['installments'] as String,
-      bankName: map['bankName'] as String,
-      type: map['type'] == 'CREDIT'
-          ? TransactionType.CREDIT
-          : TransactionType.DEBIT,
-    );
-  }
 }
 
 enum TransactionType {
@@ -54,169 +28,203 @@ enum TransactionType {
   DEBIT,
 }
 
-enum TransactionCategory {
-  INCOME,
-  LOANS_AND_FINANCING,
-  LOANS,
-  INVESTMENTS,
-  SAME_PERSON_TRANSFER,
-  TRANSFERS,
-  CREDIT_CARD_PAYMENT,
-  LEGAL_OBLIGATIONS,
-  SERVICES,
-  TELECOMMUNICATIONS,
-  EDUCATION,
-  WELLNESS_AND_FITNESS,
-  TICKETS,
-  SHOPPING,
-  DIGITAL_SERVICES,
-  GROCERIES,
-  FOOD_AND_DRINKS,
-  TRAVEL,
-  DONATIONS,
-  GAMBLING,
-  TAXES,
-  BANK_FEES,
-  HOUSING,
-  UTILITIES,
-  HOUSEWARE,
-  HEALTHCARE,
-  TRANSPORTATION,
-  INSURANCE,
-  LEISURE,
-  OTHERS,
-  AUTOMOTIVE,
+class TransactionCategory {
+  String category;
+  IconData icon;
+
+  TransactionCategory({
+    required this.category,
+    required this.icon,
+  });
 }
 
-extension GetTransactionCategory on TransactionCategory {
-  String get getName {
-    switch (this) {
-      case TransactionCategory.INCOME:
-        return 'Renda';
-      case TransactionCategory.LOANS_AND_FINANCING:
-        return 'Empréstimos e Financiamentos';
-      case TransactionCategory.LOANS:
-        return 'Empréstimos';
-      case TransactionCategory.INVESTMENTS:
-        return 'Investimentos';
-      case TransactionCategory.SAME_PERSON_TRANSFER:
-        return 'Transferência para Mesma Pessoa';
-      case TransactionCategory.TRANSFERS:
-        return 'Transferências';
-      case TransactionCategory.CREDIT_CARD_PAYMENT:
-        return 'Pagamento de Cartão de Crédito';
-      case TransactionCategory.LEGAL_OBLIGATIONS:
-        return 'Obrigações Legais';
-      case TransactionCategory.SERVICES:
-        return 'Serviços';
-      case TransactionCategory.TELECOMMUNICATIONS:
-        return 'Telecomunicações';
-      case TransactionCategory.EDUCATION:
-        return 'Educação';
-      case TransactionCategory.WELLNESS_AND_FITNESS:
-        return 'Bem-estar e Fitness';
-      case TransactionCategory.TICKETS:
-        return 'Ingressos';
-      case TransactionCategory.SHOPPING:
-        return 'Compras';
-      case TransactionCategory.DIGITAL_SERVICES:
-        return 'Serviços Digitais';
-      case TransactionCategory.GROCERIES:
-        return 'Alimentos';
-      case TransactionCategory.FOOD_AND_DRINKS:
-        return 'Comida e Bebidas';
-      case TransactionCategory.TRAVEL:
-        return 'Viagem';
-      case TransactionCategory.DONATIONS:
-        return 'Doações';
-      case TransactionCategory.GAMBLING:
-        return 'Jogos de Azar';
-      case TransactionCategory.TAXES:
-        return 'Impostos';
-      case TransactionCategory.BANK_FEES:
-        return 'Taxas Bancárias';
-      case TransactionCategory.HOUSING:
-        return 'Habitação';
-      case TransactionCategory.UTILITIES:
-        return 'Utilidades';
-      case TransactionCategory.HOUSEWARE:
-        return 'Utensílios Domésticos';
-      case TransactionCategory.HEALTHCARE:
-        return 'Saúde';
-      case TransactionCategory.TRANSPORTATION:
-        return 'Transporte';
-      case TransactionCategory.INSURANCE:
-        return 'Seguros';
-      case TransactionCategory.LEISURE:
-        return 'Lazer';
-      case TransactionCategory.OTHERS:
-        return 'Outros';
-      default:
-        return 'Desconhecido';
-    }
+TransactionCategory getCategory(String? category) {
+  if ([
+    'Income',
+    'Salary',
+    'Retirement',
+    'Entrepreneurial activities',
+    'Government aid',
+    'Non-recurring income'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Renda', icon: Icons.arrow_downward_outlined);
+  } else if (['Loans and financing','Late payment and overdraft costs', 'Financing', 'Loans','Real estate financing', 'Vehicle financing', 'Student loan']
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Empréstimos e financiamentos', icon: Icons.money_rounded);
+  } else if ([
+    'Investments',
+    'Automatic investment',
+    'Fixed income',
+    'Mutual funds',
+    'Variable income',
+    'Margin',
+    'Proceeds interests and dividends',
+    'Pension'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Investimentos', icon: Icons.add_chart);
+  } else if ([
+    'Transfer - Internal',
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Movimentações internas', icon: Icons.compare_arrows);
+  } else if ([
+    'Transfer - Bank slip',
+    'Transfer - Cash',
+    'Transfer - Check',
+    'Transfer - DOC',
+    'Transfer - Foreign exchange',
+    'Transfer - PIX',
+    'Transfer - TED',
+    'Transfers',
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Transferência', icon: Icons.cached);
+  } else if (['Same person transfer']
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Movimentação de Saldo', icon: Icons.person);
   }
-}
-
-extension GetTransactionIcon on TransactionCategory {
-  IconData get icon {
-    switch (this) {
-      case TransactionCategory.INCOME:
-        return Icons.attach_money;
-      case TransactionCategory.LOANS_AND_FINANCING:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.LOANS:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.INVESTMENTS:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.SAME_PERSON_TRANSFER:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.TRANSFERS:
-        return Icons.compare_arrows_sharp;
-      case TransactionCategory.CREDIT_CARD_PAYMENT:
-        return Icons.payments_outlined;
-      case TransactionCategory.LEGAL_OBLIGATIONS:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.SERVICES:
-        return Icons.miscellaneous_services;
-      case TransactionCategory.TELECOMMUNICATIONS:
-        return CupertinoIcons.phone;
-      case TransactionCategory.EDUCATION:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.WELLNESS_AND_FITNESS:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.TICKETS:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.SHOPPING:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.DIGITAL_SERVICES:
-        return Icons.computer;
-      case TransactionCategory.GROCERIES:
-        return Icons.fastfood;
-      case TransactionCategory.FOOD_AND_DRINKS:
-        return Icons.fastfood;
-      case TransactionCategory.TRAVEL:
-        return Icons.place;
-      case TransactionCategory.DONATIONS:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.GAMBLING:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.TAXES:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.BANK_FEES:
-        return Icons.currency_exchange_rounded;
-      case TransactionCategory.HOUSING:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.UTILITIES:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.HOUSEWARE:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.HEALTHCARE:
-        return CupertinoIcons.money_dollar_circle;
-      case TransactionCategory.TRANSPORTATION:
-        return CupertinoIcons.train_style_one;
-      case TransactionCategory.INSURANCE:
-      default:
-        return CupertinoIcons.money_dollar_circle;
-    }
+  else if (['Credit card payment' ]
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Pagamento de Cartão de Crédito', icon: Icons.credit_card_outlined);
+  } else if (['Blocked balances', 'Alimony','Legal obligations'].contains(category)) {
+    return TransactionCategory(
+        category: 'Obrigações legais', icon: Icons.gavel_rounded);
+  } else if ([
+    'Services',
+    'Telecommunications',
+    'Education',
+    'Wellness and fitness',
+    'Tickets',
+    'Internet', 'Mobile', 'TV'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Serviços', icon: Icons.computer);
+  } else if (['Online Courses', 'University', 'School', 'Kindergarten','Shopping']
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Educação', icon: Icons.school);
+  } else if (['Gyms and fitness centers', 'Sports practice', 'Wellness']
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Fitness', icon: Icons.fitness_center);
+  } else if ([
+    'Stadiums and arenas',
+    'Landmarks and museums',
+    'Cinema, theater and concerts'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Fitness', icon: Icons.stadium);
+  } else if ([
+    'Online shopping',
+    'Electronics',
+    'Pet supplies and vet',
+    'Clothing',
+    'Kids and toys',
+    'Bookstore',
+    'Sports goods',
+    'Office supplies',
+    'Cashback',
+    'Shopping'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Compras', icon: Icons.stadium);
+  } else if (['Gaming',]
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Games', icon: Icons.sports_esports);
+  } else if (['Video streaming',]
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Video streaming', icon: Icons.ondemand_video);
+  }
+  else if (['Digital services',]
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Serviços Digitais', icon: Icons.computer);
+  }
+  else if (['Music streaming',]
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Música', icon: Icons.music_note);
+  }
+  else if (['Eating out', 'Food delivery','Food and drinks'].contains(category)) {
+    return TransactionCategory(
+        category: 'Alimentação', icon: Icons.restaurant);
+  } else if ([
+    'Travel',
+    'Airport and airlines',
+    'Accomodation',
+    'Mileage programs',
+    'Bus tickets'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Viagens', icon: Icons.location_on);
+  } else if (['Lottery', 'Online bet'].contains(category)) {
+    return TransactionCategory(
+        category: 'Loterias e Apostas', icon: Icons.attach_money_sharp);
+  } else if ([
+    'Income taxes',
+    'Taxes on investments',
+    'Tax on financial operations'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Taxas', icon: Icons.corporate_fare);
+  } else if ([
+    'Account fees',
+    'Wire transfer fees and ATM fees',
+    'Credit card fees',
+    'Bank fees'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Taxas Bancárias', icon: Icons.account_balance_rounded);
+  } else if (['Rent', 'Utilities', 'Houseware', 'Urban land and building tax']
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Utilitários', icon: Icons.home_repair_service_rounded);
+  } else if (['Water', 'Electricity', 'Gas','Housing'].contains(category)) {
+    return TransactionCategory(
+        category: 'Casa', icon: Icons.house);
+  } else if (['Dentist', 'Pharmacy', 'Optometry', 'Hospital clinics and labs','Healthcare']
+      .contains(category)) {
+    return TransactionCategory(
+        category: 'Saúde', icon: Icons.health_and_safety);
+  } else if ([
+    'Taxi and ride-hailing',
+    'Public transportation',
+    'Car rental',
+    'Bycicle',
+    'Transportation'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Transporte', icon: Icons.directions_bus);
+  } else if ([
+    'Gas stations',
+    'Parking',
+    'Tolls and in vehicle payment',
+    'Vehicle ownership taxes and fees',
+    'Vehicle maintenance',
+    'Traffic tickets'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Automotivo', icon: Icons.car_crash);
+  } else if ([
+    'Life insurance',
+    'Home insurance',
+    'Health insurance',
+    'Vehicle insurance'
+  ].contains(category)) {
+    return TransactionCategory(
+        category: 'Seguros', icon: Icons.health_and_safety);
+  } else if (['Leisure'].contains(category)) {
+    return TransactionCategory(
+        category: 'Lazer', icon: Icons.surfing);
+  } else {
+    return TransactionCategory(
+        category: category??'outros', icon: Icons.dynamic_feed);
   }
 }

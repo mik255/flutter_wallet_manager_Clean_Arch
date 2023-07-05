@@ -16,38 +16,45 @@ import '../widgets/radial_pie_chart.dart';
 
 Color randomColor() {
   final Random random = Random();
-  final int r = 80 + random.nextInt(255); // Intervalo de vermelho: 80-255
-  final int g = 80 + random.nextInt(176); // Intervalo de verde: 80-255
-  final int b = 80 + random.nextInt(176); // Intervalo de azul: 80-255
+  final int r = random.nextInt(255); // Intervalo de vermelho: 80-255
+  final int g = random.nextInt(255); // Intervalo de verde: 80-255
+  final int b = random.nextInt(255); // Intervalo de azul: 80-255
   return Color.fromRGBO(
-      random.nextInt(255), random.nextInt(255), random.nextInt(255), 1.0);
+      r, g, b, 0.6);
 }
 
 const String resultsTitle =
-    'Estes valores correspontem ao somatório de entrada e saída de todas  de contas, selecione uma conta para filtrar individualmente';
+    'Estes valores correspontem ao somatório de entrada ou saída de todas  as contas, ou selecione uma conta para filtrar individualmente';
 
-String getName(Transaction transaction) {
+String getName(Transaction transaction,bool isMainCategory) {
+  if(isMainCategory){
+    return transaction.category.category;
+  }
   String title = transaction.name;
-  try {
-    title = transaction.name.split('-')[0];
-  } catch (e) {}
+
   return title;
 }
 
+TransactionType type = TransactionType.DEBIT;
+List<String> removeList = [
+  'Dinheiro guardado',
+  'Dinheiro resgatado',
+  'Movimentação de Saldo',
+];
 Future<List<Map<String, dynamic>>> _computeResult(Set<BankAccount> list) async {
   try {
     var allItems = list
         .expand((element) =>
             element.balanceTypes.expand((element) => element.transactions))
         .map((e) => {
-              'name': getName(e),
-              'value': e.type == TransactionType.DEBIT
+              'name': getName(e,true),
+              'value': e.type == type
                   ? e.amount.abs()
                   : 0,
             })
         .toSet();
     allItems.removeWhere((element) => element['value'] == 0);
-    allItems.removeWhere((element) => ['Dinheiro guardado','Dinheiro resgatado'].contains(element['name']));
+    allItems.removeWhere((element) => removeList.contains(element['name']));
     var total = allItems.map((e) => e['value'] as num).reduce((value, element) => value + element);
 
     var resultNames = allItems.map((e) => e['name']).toSet();
@@ -67,6 +74,7 @@ Future<List<Map<String, dynamic>>> _computeResult(Set<BankAccount> list) async {
                   (total == 0 ? 1 : total),
             })
         .toList();
+
     return resultValues;
   } catch (e) {
     return [];
@@ -85,49 +93,57 @@ class _ResultsPageState extends State<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    FinancialResultsCalculator financialResultsCalculator =
-        FinancialResultsCalculator(
-            allBanks: MainStances.plugglyService.getBankAccounts.toList());
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _categoryResultsCardHeader(),
+            FutureBuilder(
+                future: _computeResult(MainStances.plugglyService.getBankAccounts),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                     return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              Text('calculando...'),
+                            ],
+                          ),
+                        ));
+                  } else if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  var resultValues = snapshot.data!;
+                  return Column(
+                    children: [
 
-    return FutureBuilder(
-        future:
-            compute(_computeResult, MainStances.plugglyService.getBankAccounts),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          var resultValues = snapshot.data!;
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                //_categoryResultsCardHeader(),
-                _radialChart(resultValues),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                //   child: InputAndOutputCard(
-                //     financialResultsCalculator: financialResultsCalculator,
-                //   ),
-                // ),
-                SizedBox(
-                  height: 300,
-                )
-              ],
-            ),
-          );
-        });
+                      _radialChart(resultValues),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      //   child: InputAndOutputCard(
+                      //     financialResultsCalculator: financialResultsCalculator,
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: 300,
+                      )
+                    ],
+                  );
+                }),
+          ],
+        ),
+      ),
+    );
   }
 
   _categoryResultsCardHeader() {
     return Container(
-      height: 200,
-      width: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
       child: Column(
         children: [
           Row(
@@ -137,17 +153,10 @@ class _ResultsPageState extends State<ResultsPage> {
                 description: resultsTitle,
                 rightWidget: Container(),
               ),
-              DateRangePickerWidget(
-                initialDate: MainStances.plugglyService.dataRange,
-                onDateSelected: (date) async {
-                  setState(() {
-                    loading = true;
-                  });
-                  await MainStances.plugglyService
-                      .updateTransactionsByRange(date, 1);
-                  setState(() {
-                    loading = false;
-                  });
+              Spacer(),
+              SwitchWithText(
+                onChanged: (value) {
+                  setState(() {});
                 },
               ),
             ],
@@ -161,6 +170,79 @@ class _ResultsPageState extends State<ResultsPage> {
     data = data.map((e) => e..['color'] = randomColor()).toList();
     return RadialChartWidget(
       data: data,
+      listUnbled: removeList,
+      onItemTap: (title) {
+        setState(() {
+          if(removeList.contains(title)){
+            removeList.remove(title);
+            return;
+          }
+          removeList.add(title);
+          removeList.toSet().toList();
+        });
+
+      },
+    );
+  }
+}
+
+class SwitchWithText extends StatefulWidget {
+  const SwitchWithText({
+    Key? key,
+    required this.onChanged,
+  }) : super(key: key);
+  final Function(bool) onChanged;
+  @override
+  _SwitchWithTextState createState() => _SwitchWithTextState();
+}
+
+class _SwitchWithTextState extends State<SwitchWithText> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Transform.scale(
+              scale: 0.75,
+              child: Switch(
+              activeColor: Colors.green,
+                value: type == TransactionType.CREDIT?true:false,
+                onChanged: (value) {
+                  setState(() {
+                    type = TransactionType.CREDIT;
+                    widget.onChanged(value);
+                  });
+                },
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Text('Entrada'),
+          ],
+        ),
+        Row(
+          children: [
+            Transform.scale(
+              scale: 0.75,
+              child: Switch(
+                activeColor: Colors.red,
+                value: type == TransactionType.DEBIT?true:false,
+                onChanged: (value) {
+                  setState(() {
+                    type = TransactionType.DEBIT;
+                    widget.onChanged(value);
+                  });
+                },
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Text('Saída'),
+          ],
+        ),
+      ],
     );
   }
 }
