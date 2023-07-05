@@ -54,6 +54,16 @@ enum TransactionType {
   DEBIT,
 }
 
+// class TransactionCategory {
+//   String category;
+//   IconData icon;
+//
+//   TransactionCategory({
+//     required this.category,
+//     required this.icon,
+//   });
+// }
+
 enum TransactionCategory {
   INCOME,
   LOANS_AND_FINANCING,
@@ -124,7 +134,7 @@ extension GetTransactionCategory on TransactionCategory {
       case TransactionCategory.GROCERIES:
         return 'Alimentos';
       case TransactionCategory.FOOD_AND_DRINKS:
-        return 'Comida e Bebidas';
+        return 'Alimentos';
       case TransactionCategory.TRAVEL:
         return 'Viagem';
       case TransactionCategory.DONATIONS:
@@ -136,11 +146,11 @@ extension GetTransactionCategory on TransactionCategory {
       case TransactionCategory.BANK_FEES:
         return 'Taxas Bancárias';
       case TransactionCategory.HOUSING:
-        return 'Habitação';
+        return 'Casa';
       case TransactionCategory.UTILITIES:
         return 'Utilidades';
       case TransactionCategory.HOUSEWARE:
-        return 'Utensílios Domésticos';
+        return 'Casa';
       case TransactionCategory.HEALTHCARE:
         return 'Saúde';
       case TransactionCategory.TRANSPORTATION:
@@ -171,7 +181,13 @@ extension GetTransactionIcon on TransactionCategory {
       case TransactionCategory.SAME_PERSON_TRANSFER:
         return CupertinoIcons.money_dollar_circle;
       case TransactionCategory.TRANSFERS:
-        return Icons.compare_arrows_sharp;
+        if (getName.contains('enviada')) {
+          return CupertinoIcons.money_dollar_circle;
+        }
+        if (name.contains('enviado')) {
+          return Icons.send_to_mobile_outlined;
+        }
+        return Icons.cached;
       case TransactionCategory.CREDIT_CARD_PAYMENT:
         return Icons.payments_outlined;
       case TransactionCategory.LEGAL_OBLIGATIONS:

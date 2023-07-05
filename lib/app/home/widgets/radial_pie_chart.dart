@@ -78,9 +78,12 @@ class RadialChartWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
+            decoration:  BoxDecoration(
+              shape: BoxShape.circle,
+              color: e['color'],
+            ),
             width: 20,
             height: 20,
-            color: e['color'],
           ),
           const SizedBox(width: 8),
           Expanded(
