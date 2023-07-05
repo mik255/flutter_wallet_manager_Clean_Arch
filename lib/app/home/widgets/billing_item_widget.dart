@@ -377,7 +377,7 @@ class BillingItemTransactions extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                           ),
                         ),Text(
-                        transaction.category.name,
+                        transaction.category.getName,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -388,11 +388,9 @@ class BillingItemTransactions extends StatelessWidget {
                           ),
                         ),
                       Text(
-                        transaction.amount
-                            .abs()
-                            .toCurrencyString(withSymbol: false),
-                        style: const TextStyle(
-                          color: Color(0xFF505869),
+                        transaction.amount.abs().toCurrencyString(withSymbol: false),
+                        style:  TextStyle(
+                          color: transaction.amount>0?Colors.green:Colors.red,
                           fontSize: 14,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,
