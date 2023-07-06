@@ -180,8 +180,6 @@ class PlugglyService implements FinancialDataHelperService {
     return account;
   }
 
-
-
   Future<void> updateAllItem() async {
     loadingUpdating.value=true;
     List<String> sendRequestAndGetUpdateItemsId = await Future.wait(cacheItems.map((e) async {
