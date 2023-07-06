@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/app/home/pages/results_page.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallet_manager/util/extensions/current_formate.dart';
 import 'package:wallet_manager/util/extensions/formate_date.dart';
 import '../../../domain/models/bank_account.dart';
@@ -15,8 +16,7 @@ class BillingItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FinancialResultsCalculator financialResultsCalculator =
-        FinancialResultsCalculator(allBanks: [bankAccount]);
+    FinancialResultsCalculator financialResultsCalculator = FinancialResultsCalculator(allBanks: [bankAccount]);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16.0),
       decoration: ShapeDecoration(
@@ -48,18 +48,23 @@ class BillingItemWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                   child: Container(
-                    clipBehavior: Clip.antiAlias,
-                    height: 40,
-                    width: 40,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: Image.network(
-                      'https://t.ctcdn.com.br/3tQdC0dhzmQcV8uSocwIy8gtyic=/400x400/smart/filters:format(webp)/i624750.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      clipBehavior: Clip.antiAlias,
+                      height: 40,
+                      width: 40,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: SvgPicture.network(
+                        height: 40,
+                        width: 40,
+                        semanticsLabel: 'A shark?!',
+                        placeholderBuilder: (BuildContext context) => Container(
+                            padding: const EdgeInsets.all(30.0),
+                            child: const CircularProgressIndicator()),
+                        'https://svgsilh.com/svg/1801287.svg', // resolver logo
+                        fit: BoxFit.cover,
+                      )),
                 ),
                 const SizedBox(width: 10),
                 Column(
@@ -70,14 +75,12 @@ class BillingItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'NuBank',
-                          style: CustomTextStyles()
-                              .smallSubtitle
-                              .copyWith(fontWeight: FontWeight.w500),
+                          bankAccount.name,
+                          style: CustomTextStyles().smallSubtitle.copyWith(fontWeight: FontWeight.w500),
                         ),
-                        const Text(
-                          'Mikael S Rocha',
-                          style: TextStyle(
+                        Text(
+                          bankAccount.owner,
+                          style: const TextStyle(
                             color: Color(0xFF505869),
                             fontSize: 14,
                             fontFamily: 'Roboto',
@@ -178,8 +181,7 @@ class BillingItemWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  financialResultsCalculator.balance
-                                      .toCurrencyString(withSymbol: false),
+                                  financialResultsCalculator.balance.toCurrencyString(withSymbol: false),
                                   style: const TextStyle(
                                     color: Color(0xFF0C1425),
                                     fontSize: 14,
@@ -204,8 +206,7 @@ class BillingItemWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  financialResultsCalculator.savingsBalance
-                                      .toCurrencyString(withSymbol: false),
+                                  financialResultsCalculator.savingsBalance.toCurrencyString(withSymbol: false),
                                   style: const TextStyle(
                                     color: Color(0xFF0C1425),
                                     fontSize: 14,
@@ -221,10 +222,8 @@ class BillingItemWidget extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text(
                                         'Crédito consumido :',
@@ -236,8 +235,7 @@ class BillingItemWidget extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        e.balance.toDouble().toCurrencyString(
-                                            withSymbol: false),
+                                        e.balance.toDouble().toCurrencyString(withSymbol: false),
                                         style: const TextStyle(
                                           color: Color(0xFF0C1425),
                                           fontSize: 14,
@@ -251,10 +249,8 @@ class BillingItemWidget extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text(
                                         'Limite :',
@@ -266,8 +262,7 @@ class BillingItemWidget extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        e.limit!.toDouble().toCurrencyString(
-                                            withSymbol: false),
+                                        e.limit!.toDouble().toCurrencyString(withSymbol: false),
                                         style: const TextStyle(
                                           color: Color(0xFF0C1425),
                                           fontSize: 14,
@@ -328,13 +323,10 @@ class BillingItemTransactions extends StatelessWidget {
                       clipBehavior: Clip.antiAlias,
                       height: 40,
                       width: 40,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xC3E6E9F1)
-                      ),
-                      child:  Center(
+                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xC3E6E9F1)),
+                      child: Center(
                           child: Icon(
-                            transaction.category.icon,
+                        transaction.category.icon,
                         color: const Color(0xFF292E38),
                       ))),
                 ),
@@ -350,9 +342,7 @@ class BillingItemTransactions extends StatelessWidget {
                           Text(
                             title,
                             maxLines: 3,
-                            style: CustomTextStyles()
-                                .smallSubtitle
-                                .copyWith(fontWeight: FontWeight.w500),
+                            style: CustomTextStyles().smallSubtitle.copyWith(fontWeight: FontWeight.w500),
                           ),
                           Spacer(),
                           Text(
@@ -377,21 +367,22 @@ class BillingItemTransactions extends StatelessWidget {
                             fontFamily: 'Roboto',
                             fontWeight: FontWeight.w400,
                           ),
-                        ),Text(
-                        transaction.category.category,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Color(0xFF505869),
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w400,
-                          ),
                         ),
                       Text(
+                        transaction.category.category,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Color(0xFF505869),
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Text(
                         transaction.amount.abs().toCurrencyString(withSymbol: false),
-                        style:  TextStyle(
-                          color: transaction.amount>0||transaction.type==TransactionType.CREDIT?Colors.green:Colors.red,
+                        style: TextStyle(
+                          color: transaction.amount > 0 || transaction.type == TransactionType.CREDIT ? Colors.green : Colors.red,
                           fontSize: 14,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w400,

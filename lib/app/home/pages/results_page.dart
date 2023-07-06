@@ -24,7 +24,7 @@ Color randomColor() {
 }
 
 const String resultsTitle =
-    'Estes valores correspontem ao somatório de entrada ou saída de todas  as contas, ou selecione uma conta para filtrar individualmente';
+    'Estes valores correspontem ao somatório de entrada ou saída de todas  as contas. Para retirar um item do somatório, basta clicar no mesmo.';
 
 String getName(Transaction transaction,bool isMainCategory) {
   if(isMainCategory){
@@ -37,8 +37,6 @@ String getName(Transaction transaction,bool isMainCategory) {
 
 TransactionType type = TransactionType.DEBIT;
 List<String> removeList = [
-  'Dinheiro guardado',
-  'Dinheiro resgatado',
   'Movimentação de Saldo',
 ];
 Future<List<Map<String, dynamic>>> _computeResult(Set<BankAccount> list) async {

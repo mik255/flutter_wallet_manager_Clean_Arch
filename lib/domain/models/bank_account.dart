@@ -1,21 +1,25 @@
-
-
 import 'package:wallet_manager/domain/models/transaction.dart';
 
-class BankAccount{
+class BankAccount {
   List<BalanceType> balanceTypes;
+  String name;
+  String owner;
+  String logo;
 
   BankAccount({
     required this.balanceTypes,
+    required this.name,
+    required this.owner,
+    required this.logo,
   });
-
 }
-// ignore: constant_identifier_names
-enum BalanceTypeEnum { CHECKING_ACCOUNT, SAVINGS_ACCOUNT,CREDIT_CARD }
 
-extension GetName on BalanceTypeEnum{
-  String get getName{
-    switch(this){
+// ignore: constant_identifier_names
+enum BalanceTypeEnum { CHECKING_ACCOUNT, SAVINGS_ACCOUNT, CREDIT_CARD }
+
+extension GetName on BalanceTypeEnum {
+  String get getName {
+    switch (this) {
       case BalanceTypeEnum.CHECKING_ACCOUNT:
         return 'Saldo em conta';
       case BalanceTypeEnum.SAVINGS_ACCOUNT:
@@ -50,6 +54,4 @@ class BalanceType {
     required this.balanceCloseDate,
     required this.balanceDueDate,
   });
-
-
 }

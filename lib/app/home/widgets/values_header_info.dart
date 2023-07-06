@@ -22,9 +22,9 @@ class _ValuesHeaderInfoState extends State<ValuesHeaderInfo>  with SingleTickerP
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Somatório de todas as contas',
+              'Saldo em Contas',
               style: TextStyle(
-                color: Color(0x660C1425),
+                color: Color(0xB80C1425),
                 fontSize: 10,
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.w400,
