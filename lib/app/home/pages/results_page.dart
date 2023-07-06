@@ -1,17 +1,9 @@
 import 'dart:math';
-
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/app/home/pages/transactions_page.dart';
 import 'package:wallet_manager/app/home/widgets/info_description.dart';
 import 'package:wallet_manager/domain/models/transaction.dart';
-
 import '../../../domain/models/bank_account.dart';
-import '../../../domain/models/financial_results_calculator.dart';
 import '../../../main_stances.dart';
-import '../../shared_widgets/date_rage_piker.dart';
-import '../widgets/input_and_output_card.dart';
 import '../widgets/radial_pie_chart.dart';
 
 Color randomColor() {

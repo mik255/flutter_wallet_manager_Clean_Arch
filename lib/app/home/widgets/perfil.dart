@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/home/pages/home_page.dart';
 import '../../../main_stances.dart';
 import '../../shared/view_models/user_viewmodel.dart';
-import '../../shared_widgets/load_lottie_widgets.dart';
+import '../../shared/widgets/load_lottie_widgets.dart';
 import '../../styles/container_decorators.dart';
 
 
