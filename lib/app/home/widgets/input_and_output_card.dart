@@ -3,8 +3,6 @@ import 'package:wallet_manager/domain/models/financial_results_calculator.dart';
 import 'package:wallet_manager/main_stances.dart';
 import 'package:wallet_manager/util/extensions/current_formate.dart';
 
-import '../../shared_widgets/date_rage_piker.dart';
-
 class InputAndOutputCard extends StatefulWidget {
   const InputAndOutputCard(
       {super.key, required this.financialResultsCalculator});
