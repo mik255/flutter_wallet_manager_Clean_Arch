@@ -5,6 +5,7 @@ import 'package:wallet_manager/app/home/pages/results_page.dart';
 import 'package:wallet_manager/app/home/pages/transactions_page.dart';
 import 'package:wallet_manager/app/home/widgets/perfil.dart';
 import 'package:wallet_manager/domain/models/financial_results_calculator.dart';
+import 'package:wallet_manager/infra/services/financial_data_helper/pluggly/pluggly_impl.dart';
 import '../../../main_stances.dart';
 import '../../shared/widgets/date_rage_piker.dart';
 import '../widgets/values_header_info.dart';
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   loadInitialData() async {
     loading = true;
     if (widget.needLoadData) {
-      await MainStances.plugglyService.loadData();
+      await MainStances.openFinanceService.loadData();
     }
     setState(() {
       loading = false;
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     setState(() {
       loading = true;
     });
-    await MainStances.plugglyService.getAccount(currentItemId);
+    await MainStances.openFinanceService.getAccount(currentItemId);
     setState(() {
       showPlugglyConnect = false;
       loading = false;
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     FinancialResultsCalculator financialResultsCalculator = FinancialResultsCalculator(
-      allBanks: MainStances.plugglyService.getBankAccounts.toList(),
+      allBanks: MainStances.openFinanceService.getBankAccounts.toList(),
     );
     return SafeArea(
       child: Scaffold(
@@ -74,13 +75,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           }
           if (showPlugglyConnect) {
             return PluggyConnect(
-              connectToken: MainStances.plugglyService.accessToken,
+              connectToken: (MainStances.openFinanceService as PlugglyService).accessToken,
               onSuccess: (data) {
                 currentItemId = data['item']['id'];
                 getNewAccount();
-              },
-              onEvent: (event) {
-                print(event);
               },
               onClose: () {
                 getNewAccount();
@@ -100,7 +98,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         setState(() {
                           loading = true;
                         });
-                        await MainStances.plugglyService.updateAllItem();
+                        await MainStances.openFinanceService.updateAllItem();
                         setState(() {
                           loading = false;
                         });
@@ -131,12 +129,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   DateRangePickerWidget(
-                                    initialDate: MainStances.plugglyService.dataRange,
+                                    initialDate: (MainStances.openFinanceService as PlugglyService).dataRange,
                                     onDateSelected: (date) async {
                                       setState(() {
                                         loading = true;
                                       });
-                                      await MainStances.plugglyService
+                                      await MainStances.openFinanceService
                                           .updateTransactionsByRange(date, 1);
                                       setState(() {
                                         loading = false;
@@ -176,9 +174,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Navigator.pop(context);
                           },
                         ),
-                        // Conteúdo da Tab 2
                         const TransactionsPage(),
-                        // Conteúdo da Tab 3
                         const ResultsPage(),
                       ],
                     ),

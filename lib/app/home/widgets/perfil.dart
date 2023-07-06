@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/home/pages/home_page.dart';
+import '../../../infra/services/financial_data_helper/pluggly/pluggly_impl.dart';
 import '../../../main_stances.dart';
 import '../../shared/view_models/user_viewmodel.dart';
 import '../../shared/widgets/load_lottie_widgets.dart';
@@ -55,17 +56,16 @@ class PerfilWidget extends StatelessWidget {
         const Spacer(),
         InkWell(
             onTap: () {
-              MainStances.plugglyService.updateAllItem();
+              MainStances.openFinanceService.updateAllItem();
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Scaffold(
                               body: AnimatedBuilder(
                             animation:
-                                MainStances.plugglyService.loadingUpdating,
+                            (MainStances.openFinanceService as PlugglyService).loadingUpdating,
                             builder: (context, child) {
-                              if (MainStances
-                                  .plugglyService.loadingUpdating.value) {
+                              if ((MainStances.openFinanceService as PlugglyService).loadingUpdating.value) {
                                 return Scaffold(
                                   backgroundColor: Colors.white,
                                   bottomNavigationBar: Container(

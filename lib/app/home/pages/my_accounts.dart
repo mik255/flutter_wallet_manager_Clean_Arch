@@ -216,9 +216,9 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                 ],
               ),
               ...List.generate(
-                  MainStances.plugglyService.getBankAccounts.length,
+                  MainStances.openFinanceService.getBankAccounts.length,
                   (index) => BillingItemWidget(
-                      bankAccount: MainStances.plugglyService.getBankAccounts.toList()[index])),
+                      bankAccount: MainStances.openFinanceService.getBankAccounts.toList()[index])),
               Container(
                 height: 200,
               )

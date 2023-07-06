@@ -90,7 +90,7 @@ class _ResultsPageState extends State<ResultsPage> {
           children: [
             _categoryResultsCardHeader(),
             FutureBuilder(
-                future: _computeResult(MainStances.plugglyService.getBankAccounts),
+                future: _computeResult(MainStances.openFinanceService.getBankAccounts),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                      return const Center(
