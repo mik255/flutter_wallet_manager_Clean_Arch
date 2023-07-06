@@ -3,9 +3,8 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/home/pages/home_page.dart';
-import 'package:wallet_manager/app/view_models/user_viewmodel.dart';
-
 import '../../infra/services/auth/google_login_impl.dart';
+import '../shared/view_models/user_viewmodel.dart';
 
 
 

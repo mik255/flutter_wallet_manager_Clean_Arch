@@ -45,6 +45,7 @@ dependencies:
   lottie: ^1.1.0
   charts_flutter:
   fl_chart: ^0.36.0
+  flutter_svg: 2.0.7
 
 
 dev_dependencies:

@@ -12,11 +12,5 @@ class MainStances {
     loading.value = false;
   }
 
-  getBankAccounts(String id) async {
-    loading.value = true;
-     plugglyService.getAccount(id);
-    loading.value = false;
-  }
-
   static late SharedPreferences preferences;
 }

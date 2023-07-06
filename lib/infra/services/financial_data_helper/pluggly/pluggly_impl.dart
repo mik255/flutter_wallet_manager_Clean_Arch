@@ -24,13 +24,10 @@ class PlugglyService implements FinancialDataHelperService {
   ValueNotifier<bool> loadingUpdating = ValueNotifier<bool>(false);
 
   loadData() async {
-    Platform.environment.forEach((key, value) {
-      print('$key: $value');
-    });
     const clientId = String.fromEnvironment('CLIENT_ID');
     const clientSecret = String.fromEnvironment('CLIENT_SECRET');
-    prefs = await SharedPreferences.getInstance();
-    cacheItems = prefs!.getStringList('items')?.toSet() ?? {};
+     prefs = await SharedPreferences.getInstance();
+     cacheItems = prefs!.getStringList('items')?.toSet() ?? {};
 
     final apiKeyResponse = await dio.post('$baseUrl/auth',
         options: Options(
@@ -64,6 +61,7 @@ class PlugglyService implements FinancialDataHelperService {
     var result = await Future.wait([
       ...items.map((e) => getAccount(e)),
     ]);
+    cacheItems = items.toSet();
     await prefs!.setStringList('items', cacheItems.toList());
     getBankAccounts = result.toSet();
   }
@@ -128,7 +126,6 @@ class PlugglyService implements FinancialDataHelperService {
           .toList());
       page++;
     }
-    print('transactions: ${transactions.length}');
     return balanceType.transactions = transactions;
   }
 
@@ -143,8 +140,9 @@ class PlugglyService implements FinancialDataHelperService {
       ),
     );
     var list = response.data['results'] as List<dynamic>;
-
+                        String owner = list[0]['owner'];    
     var listBalances = await Future.wait(list.map((e) async {
+
       var balanceType = BalanceType(
         balanceCloseDate: e['creditData']?['balanceCloseDate'],
         balanceDueDate: e['creditData']?['balanceDueDate'],
@@ -163,14 +161,24 @@ class PlugglyService implements FinancialDataHelperService {
       cacheItems.add(itemId);
       return balanceType;
     }).toList());
+    var result = await dio.get(
+      '$baseUrl/items/$itemId',
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "X-API-KEY": apiKey,
+        },
+      ),
+    );
     var account = BankAccount(
+      owner: owner,
+      logo: result.data['connector']['imageUrl'],
+      name: result.data['connector']['name'],
       balanceTypes: listBalances,
     );
     getBankAccounts.add(account);
     return account;
   }
-
-
 
   Future<void> updateAllItem() async {
     loadingUpdating.value=true;

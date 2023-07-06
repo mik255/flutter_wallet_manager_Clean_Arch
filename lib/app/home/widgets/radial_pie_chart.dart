@@ -25,8 +25,7 @@ class RadialChartWidget extends StatelessWidget {
             color: e['color'],
             title: '',
             radius: 25,
-            titleStyle:
-                const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            titleStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
         )
         .toList();
@@ -87,54 +86,47 @@ class RadialChartWidget extends StatelessWidget {
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 500),
       opacity: e['value'] == -1 ? 0.5 : 1,
-      child: InkWell(
-        onTap: () => onItemTap(e['name']),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: e['color'],
-                ),
-                width: 20,
-                height: 20,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: e['color'],
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                child: Text(
-                              maxLines: 2,
-                              title,
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                            Container(
-                                child: Text(
-                              maxLines: 2,
-                              subtitle,
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        if(e['value'] > -1)
+              width: 20,
+              height: 20,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                              child: Text(
+                            maxLines: 2,
+                            title,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      if (e['value'] > -1)
                         Container(
                             padding: const EdgeInsets.all(2),
                             height: 20,
@@ -153,18 +145,37 @@ class RadialChartWidget extends StatelessWidget {
                                 ),
                               ),
                             )),
-                      ],
-                    ),
-                    if(e['value'] > -1)
-                    Spacer(),
-                    if(e['value'] > -1)
-                    Text(
-                        (double.parse(e['total'].toString()).toCurrencyString())),
-                  ],
-                ),
+                    ],
+                  ),
+                  if (e['value'] > -1) Spacer(),
+                  if (e['value'] > -1)
+                    Text((double.parse(e['total'].toString()).toCurrencyString())),
+                ],
               ),
-            ],
-          ),
+            ),
+            InkWell(
+              onTap: () => onItemTap(e['name']),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Container(
+                  height: 24,
+                    width: 24,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: e['value'] > -1?Colors.grey[200]:Colors.transparent,
+                      border: Border.all(color: e['value'] > -1?Colors.transparent:Colors.grey[300]!,width: 2),
+                    ),
+                    child:  Center(
+                        child:
+                           Icon(
+                           e['value'] > -1? Icons.close :
+                              Icons.add,
+                              color: e['value'] > -1?Colors.grey:Colors.black,
+                              size: 14,
+                            ))),
+              ),
+            )
+          ],
         ),
       ),
     );
