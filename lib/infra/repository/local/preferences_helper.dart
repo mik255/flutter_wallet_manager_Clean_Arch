@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'abstract_preferences_helper.dart';
 
+
+
 class SharedPreferencesHelper implements IPreferencesHelper{
 
   static late SharedPreferences preferences;

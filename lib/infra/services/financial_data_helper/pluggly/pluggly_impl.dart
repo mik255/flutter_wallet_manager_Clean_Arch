@@ -23,6 +23,7 @@ class PlugglyService implements FinancialDataHelperService {
 
   ValueNotifier<bool> loadingUpdating = ValueNotifier<bool>(false);
 
+  @override
   loadData() async {
     const clientId = String.fromEnvironment('CLIENT_ID');
     const clientSecret = String.fromEnvironment('CLIENT_SECRET');
@@ -54,6 +55,7 @@ class PlugglyService implements FinancialDataHelperService {
     await getAllAccounts();
   }
 
+  @override
   Future<void> getAllAccounts() async {
     getBankAccounts = {};
     cacheItems = {};
@@ -66,6 +68,7 @@ class PlugglyService implements FinancialDataHelperService {
     getBankAccounts = result.toSet();
   }
 
+  @override
   Future<void> updateTransactionsByRange(DateTimeRange dateTimeRange, int page,
       {int limit = 500}) async {
     dataRange = dateTimeRange;
@@ -74,7 +77,7 @@ class PlugglyService implements FinancialDataHelperService {
     for (var element in balanceTypes) {
       element.transactions = [];
     }
-    await Future.wait(balanceTypes.map((e) => _getTransactions(
+    await Future.wait(balanceTypes.map((e) => getTransactions(
           e,
           range: dataRange,
           page: page,
@@ -82,7 +85,8 @@ class PlugglyService implements FinancialDataHelperService {
         )));
   }
 
-  Future<List<Transaction>> _getTransactions(BalanceType balanceType,
+  @override
+  Future<List<Transaction>> getTransactions(BalanceType balanceType,
       {DateTimeRange? range, int page = 1, int limit = 500}) async {
     dataRange = range ?? dataRange;
     List<Transaction> transactions = [];
@@ -129,6 +133,7 @@ class PlugglyService implements FinancialDataHelperService {
     return balanceType.transactions = transactions;
   }
 
+  @override
   Future<BankAccount> getAccount(String itemId) async {
     var response = await dio.get(
       '$baseUrl/accounts?itemId=$itemId',
@@ -157,7 +162,7 @@ class PlugglyService implements FinancialDataHelperService {
         logo: '',
         transactions: [],
       );
-      await _getTransactions(balanceType, page: 1, range: dataRange);
+      await getTransactions(balanceType, page: 1, range: dataRange);
       cacheItems.add(itemId);
       return balanceType;
     }).toList());
@@ -180,6 +185,7 @@ class PlugglyService implements FinancialDataHelperService {
     return account;
   }
 
+  @override
   Future<void> updateAllItem() async {
     loadingUpdating.value=true;
     List<String> sendRequestAndGetUpdateItemsId = await Future.wait(cacheItems.map((e) async {
@@ -197,6 +203,7 @@ class PlugglyService implements FinancialDataHelperService {
     loadingUpdating.value=false;
   }
 
+  @override
   Future<Response> updatingItemById(String itemId) async {
     var response = await dio.get(
       '$baseUrl/items/$itemId',
@@ -215,6 +222,7 @@ class PlugglyService implements FinancialDataHelperService {
     return response;
   }
 
+  @override
   Future<String> updateItem(String itemId) async {
     var response = await dio.patch(
       '$baseUrl/items/$itemId',

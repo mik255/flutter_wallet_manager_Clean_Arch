@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app/login/login_build.dart';
 import 'app/shared/view_models/user_viewmodel.dart';
-import 'infra/preferences_helper.dart';
+import 'infra/repository/local/preferences_helper.dart';
 import 'main_stances.dart';
 
 void main() async{

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import '../../../domain/models/user.dart';
-import '../../../infra/abstract_preferences_helper.dart';
+import '../../../infra/repository/local/abstract_preferences_helper.dart';
 import '../../../infra/services/auth/auth_service_helper.dart';
 
 

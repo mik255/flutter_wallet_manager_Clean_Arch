@@ -22,14 +22,14 @@ class ComputeValues {
 
 Future<ComputeValues> computeCalcuc(ComputeValues computeValues) async {
   await Future.delayed(const Duration(milliseconds: 200));
-  computeValues.transactions.value = MainStances.plugglyService.getBankAccounts
+  computeValues.transactions.value = MainStances.openFinanceService.getBankAccounts
       .expand((element) =>
           element.balanceTypes.expand((element) => element.transactions))
       .map((e) => BillingItemTransactions(transaction: e))
       .toList();
 
   computeValues.financialResultsCalculator = FinancialResultsCalculator(
-    allBanks: MainStances.plugglyService.getBankAccounts.toList(),
+    allBanks: MainStances.openFinanceService.getBankAccounts.toList(),
   );
   return computeValues;
 }
@@ -63,7 +63,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   ComputeValues(
                       transactions: ValueNotifier<List<BillingItemTransactions>>([]),
                       financialResultsCalculator:  FinancialResultsCalculator(
-                        allBanks: MainStances.plugglyService.getBankAccounts.toList(),
+                        allBanks: MainStances.openFinanceService.getBankAccounts.toList(),
                       ),
                     allTransactions: [],
                   )),
