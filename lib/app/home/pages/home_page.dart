@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool showPlugglyConnect = false;
   late TabController _tabController;
   bool menuOpened = false;
-  bool loading = false;
   String currentItemId = '';
   late HomeViewModel homeviewmodel;
 
@@ -37,17 +36,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     homeviewmodel.loadInitialData();
   }
 
-  getNewAccount() async {
-    setState(() {
-      loading = true;
-    });
-    await MainStances.openFinanceService.getAccount(currentItemId);
-    setState(() {
-      showPlugglyConnect = false;
-      loading = false;
-    });
-  }
-
   @override
   void dispose() {
     _tabController.dispose();
@@ -57,7 +45,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     FinancialResultsCalculator financialResultsCalculator = FinancialResultsCalculator(
-      allBanks: MainStances.openFinanceService.getBankAccounts.toList(),
+      allBanks: homeviewmodel.openFinanceService.getBankAccounts.toList(),
     );
 
     return SafeArea(
@@ -65,20 +53,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         body: AnimatedBuilder(
             animation: homeviewmodel.loading,
             builder: (context, _) {
-              if (loading) {
+              if (homeviewmodel.loading.value) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
               if (showPlugglyConnect) {
                 return PluggyConnect(
-                  connectToken: (MainStances.openFinanceService as PlugglyService).accessToken,
+                  connectToken: (homeviewmodel.openFinanceService as PlugglyService).accessToken,
                   onSuccess: (data) {
                     currentItemId = data['item']['id'];
-                    getNewAccount();
+                    homeviewmodel.getNewAccount(currentItemId);
                   },
                   onClose: () {
-                    getNewAccount();
+                    homeviewmodel.getNewAccount(currentItemId);
                   },
                 );
               }
@@ -92,13 +80,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         padding: const EdgeInsets.all(8.0),
                         child: PerfilWidget(
                           onTap: () async {
-                            setState(() {
-                              loading = true;
-                            });
-                            await MainStances.openFinanceService.updateAllItem();
-                            setState(() {
-                              loading = false;
-                            });
+                            homeviewmodel.updateAllItem();
                           },
                         ),
                       ),
@@ -126,18 +108,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       DateRangePickerWidget(
-                                        initialDate:
-                                            (MainStances.openFinanceService as PlugglyService)
-                                                .dataRange,
+                                        initialDate: homeviewmodel.dataRange,
                                         onDateSelected: (date) async {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          await MainStances.openFinanceService
-                                              .updateTransactionsByRange(date, 1);
-                                          setState(() {
-                                            loading = false;
-                                          });
+                                          homeviewmodel.updateTransactionsByRange(date);
                                         },
                                       ),
                                     ],
@@ -155,7 +128,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         Tab(text: 'Resultados'),
                       ],
                     ),
-                    Container(
+                    SizedBox(
                       height: MediaQuery.of(context).size.height - 100,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),

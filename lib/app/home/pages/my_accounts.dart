@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../domain/models/financial_results_calculator.dart';
 import '../../../main_stances.dart';
 import '../../styles/text_styles.dart';
+import '../home_view_model.dart';
 import '../widgets/billing_item_widget.dart';
 import '../widgets/info_description.dart';
 import '../widgets/input_and_output_card.dart';
@@ -24,6 +26,7 @@ class MyAccounts extends StatefulWidget {
 class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    var homeviewmodel = context.read<HomeViewModel>();
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
@@ -216,9 +219,9 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                 ],
               ),
               ...List.generate(
-                  MainStances.openFinanceService.getBankAccounts.length,
+                  homeviewmodel.openFinanceService.getBankAccounts.length,
                   (index) => BillingItemWidget(
-                      bankAccount: MainStances.openFinanceService.getBankAccounts.toList()[index])),
+                      bankAccount: homeviewmodel.openFinanceService.getBankAccounts.toList()[index])),
               Container(
                 height: 200,
               )

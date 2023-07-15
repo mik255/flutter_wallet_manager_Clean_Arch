@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/home/home_view_model.dart';
+import 'package:wallet_manager/infra/services/financial_data_helper/pluggly/pluggly_impl.dart';
 import 'app/login/login_build.dart';
 import 'app/shared/view_models/user_viewmodel.dart';
 import 'infra/repository/local/preferences_helper.dart';
@@ -29,7 +30,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
         Provider<HomeViewModel>(
-          create: (_) => HomeViewModel(),
+          create: (_) => HomeViewModel(
+            openFinanceService: PlugglyService(),
+          ),
         ),
       ],
       child: MaterialApp(

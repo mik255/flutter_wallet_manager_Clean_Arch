@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/domain/models/financial_results_calculator.dart';
-import 'package:wallet_manager/main_stances.dart';
 import 'package:wallet_manager/util/extensions/current_formate.dart';
 
-import '../../../infra/services/financial_data_helper/pluggly/pluggly_impl.dart';
 
 class InputAndOutputCard extends StatefulWidget {
   const InputAndOutputCard(
@@ -20,7 +18,6 @@ class _InputAndOutputCardState extends State<InputAndOutputCard> {
 
   @override
   Widget build(BuildContext context) {
-    var currentDateRange = (MainStances.openFinanceService as PlugglyService).dataRange;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(

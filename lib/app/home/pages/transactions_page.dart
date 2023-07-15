@@ -1,6 +1,8 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wallet_manager/app/home/home_view_model.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
 import '../../../domain/models/financial_results_calculator.dart';
 import '../../../main_stances.dart';
@@ -20,16 +22,16 @@ class ComputeValues {
       required this.allTransactions});
 }
 
-Future<ComputeValues> computeCalcuc(ComputeValues computeValues) async {
+Future<ComputeValues> computeCalcuc(ComputeValues computeValues,HomeViewModel homeViewModel) async {
   await Future.delayed(const Duration(milliseconds: 200));
-  computeValues.transactions.value = MainStances.openFinanceService.getBankAccounts
+  computeValues.transactions.value = homeViewModel.openFinanceService.getBankAccounts
       .expand((element) =>
           element.balanceTypes.expand((element) => element.transactions))
       .map((e) => BillingItemTransactions(transaction: e))
       .toList();
 
   computeValues.financialResultsCalculator = FinancialResultsCalculator(
-    allBanks: MainStances.openFinanceService.getBankAccounts.toList(),
+    allBanks: homeViewModel.openFinanceService.getBankAccounts.toList(),
   );
   return computeValues;
 }
@@ -51,10 +53,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
   }
   @override
   Widget build(BuildContext context) {
+    var homeviewmodel = context.read<HomeViewModel>();
     return AnimatedBuilder(
-        animation: MainStances.loading,
+        animation: homeviewmodel.loading,
         builder: (context, child) {
-          if (MainStances.loading.value) {
+          if (homeviewmodel.loading.value) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -63,10 +66,10 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   ComputeValues(
                       transactions: ValueNotifier<List<BillingItemTransactions>>([]),
                       financialResultsCalculator:  FinancialResultsCalculator(
-                        allBanks: MainStances.openFinanceService.getBankAccounts.toList(),
+                        allBanks: homeviewmodel.openFinanceService.getBankAccounts.toList(),
                       ),
                     allTransactions: [],
-                  )),
+                  ),homeviewmodel),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -138,7 +141,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                             ],
                           ),
                         ),
-                        if (MainStances.loading.value)
+                        if (homeviewmodel.loading.value)
                           const Center(child: LinearProgressIndicator()),
                         if (snapshot.data!.transactions.value.isNotEmpty)
                           Column(
@@ -163,7 +166,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                               child: Padding(
                             padding: const EdgeInsets.all(32.0),
                             child: Builder(builder: (context) {
-                              if (MainStances.loading.value) {
+                              if (homeviewmodel.loading.value) {
                                 return const Center(
                                     child: Text('carregando...'));
                               }
