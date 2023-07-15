@@ -188,18 +188,23 @@ class PlugglyService implements FinancialDataHelperService {
   @override
   Future<void> updateAllItem() async {
     loadingUpdating.value=true;
-    List<String> sendRequestAndGetUpdateItemsId = await Future.wait(cacheItems.map((e) async {
-      return updateItem(e);
-    }).toList());
-    List<String> itemsId = sendRequestAndGetUpdateItemsId;
-    var response = await Future.wait(
-      itemsId.map((e) async {
-        return updatingItemById(e);
-      }).toList(),
-    );
-    await prefs!.setStringList(
-        'items', response.map((e) => e.data['id'] as String).toList());
-    await getAllAccounts();
+    try {
+      List<String> sendRequestAndGetUpdateItemsId = await Future.wait(cacheItems.map((e) async {
+        return updateItem(e);
+      }).toList());
+      List<String> itemsId = sendRequestAndGetUpdateItemsId;
+      var response = await Future.wait(
+        itemsId.map((e) async {
+          return updatingItemById(e);
+        }).toList(),
+      );
+      await prefs!.setStringList(
+          'items', response.map((e) => e.data['id'] as String).toList());
+      await getAllAccounts();
+    } catch (e,_) {
+      print(e);
+      print(_);
+    }
     loadingUpdating.value=false;
   }
 

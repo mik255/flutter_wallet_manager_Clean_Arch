@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/home/widgets/info_description.dart';
 import 'package:wallet_manager/domain/models/transaction.dart';
 import '../../../domain/models/bank_account.dart';
 import '../../../main_stances.dart';
+import '../home_view_model.dart';
 import '../widgets/radial_pie_chart.dart';
 
 Color randomColor() {
@@ -83,6 +85,7 @@ class _ResultsPageState extends State<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
+    var homeviewmodel = context.read<HomeViewModel>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SingleChildScrollView(
@@ -90,7 +93,7 @@ class _ResultsPageState extends State<ResultsPage> {
           children: [
             _categoryResultsCardHeader(),
             FutureBuilder(
-                future: _computeResult(MainStances.openFinanceService.getBankAccounts),
+                future: _computeResult(homeviewmodel.openFinanceService.getBankAccounts),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                      return const Center(
@@ -190,6 +193,7 @@ class _SwitchWithTextState extends State<SwitchWithText> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,

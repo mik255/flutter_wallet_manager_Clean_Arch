@@ -6,6 +6,7 @@ import '../../../main_stances.dart';
 import '../../shared/view_models/user_viewmodel.dart';
 import '../../shared/widgets/load_lottie_widgets.dart';
 import '../../styles/container_decorators.dart';
+import '../home_view_model.dart';
 
 
 class PerfilWidget extends StatelessWidget {
@@ -16,6 +17,7 @@ class PerfilWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserViewModel viewModel = Provider.of<UserViewModel>(context);
+    var homeViewModel = Provider.of<HomeViewModel>(context);
     return Row(
       children: [
         Container(
@@ -56,16 +58,16 @@ class PerfilWidget extends StatelessWidget {
         const Spacer(),
         InkWell(
             onTap: () {
-              MainStances.openFinanceService.updateAllItem();
-              Navigator.pushReplacement(
+              homeViewModel.openFinanceService.updateAllItem();
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Scaffold(
                               body: AnimatedBuilder(
                             animation:
-                            (MainStances.openFinanceService as PlugglyService).loadingUpdating,
+                            (homeViewModel.openFinanceService as PlugglyService).loadingUpdating,
                             builder: (context, child) {
-                              if ((MainStances.openFinanceService as PlugglyService).loadingUpdating.value) {
+                              if ((homeViewModel.openFinanceService as PlugglyService).loadingUpdating.value) {
                                 return Scaffold(
                                   backgroundColor: Colors.white,
                                   bottomNavigationBar: Container(
