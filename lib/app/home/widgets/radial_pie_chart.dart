@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wallet_manager/util/extensions/current_formate.dart';
+import 'package:wallet_manager/shared/extensions/current_formate.dart';
 
 class RadialChartWidget extends StatelessWidget {
   final List<Map<String, dynamic>> data;

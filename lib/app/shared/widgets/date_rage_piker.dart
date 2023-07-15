@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/util/extensions/formate_date.dart';
+import 'package:wallet_manager/shared/extensions/formate_date.dart';
 
 class DateRangePickerWidget extends StatefulWidget {
   const DateRangePickerWidget({

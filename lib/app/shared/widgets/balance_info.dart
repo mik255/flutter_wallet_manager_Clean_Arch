@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/util/extensions/current_formate.dart';
+import 'package:wallet_manager/shared/extensions/current_formate.dart';
 
 class BalanceInfo {
   final String name;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallet_manager/util/extensions/current_formate.dart';
-import 'package:wallet_manager/util/extensions/formate_date.dart';
+import 'package:wallet_manager/shared/extensions/current_formate.dart';
+import 'package:wallet_manager/shared/extensions/formate_date.dart';
 import '../../../domain/models/bank_account.dart';
 import '../../../domain/models/financial_results_calculator.dart';
 import '../../../domain/models/transaction.dart';

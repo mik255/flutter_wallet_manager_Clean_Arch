@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/domain/models/financial_results_calculator.dart';
-import 'package:wallet_manager/util/extensions/current_formate.dart';
+import 'package:wallet_manager/shared/extensions/current_formate.dart';
 
 
 class InputAndOutputCard extends StatefulWidget {
