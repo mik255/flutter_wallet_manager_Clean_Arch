@@ -3,18 +3,14 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/home/pages/home_page.dart';
-import '../../infra/services/auth/google_login_impl.dart';
 import '../shared/view_models/user_viewmodel.dart';
-
-
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    UserViewModel viewModel = Provider.of<UserViewModel>(context);
+    AuthViewModel viewModel = Provider.of<AuthViewModel>(context);
 
     return Container(
       decoration: const BoxDecoration(
@@ -35,11 +31,7 @@ class LoginPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               onPressed: () async {
-                await viewModel
-                    .login(
-                      GoogleLoginServiceImpl(),
-                    )
-                    .then((value) => value ? goTohome(context) : null);
+                await viewModel.singIn().then((value) => value ? goTohome(context) : null);
               },
             ),
           ),
@@ -83,7 +75,9 @@ class LoginPage extends StatelessWidget {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const HomePage(needLoadData: true,),
+        builder: (context) => const HomePage(
+          needLoadData: true,
+        ),
       ),
     );
   }

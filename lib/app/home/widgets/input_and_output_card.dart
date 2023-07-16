@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_manager/domain/models/financial_results_calculator.dart';
+import 'package:wallet_manager/domain/usecases/calculators/financial_results_calculator.dart';
 import 'package:wallet_manager/shared/extensions/current_formate.dart';
 
 

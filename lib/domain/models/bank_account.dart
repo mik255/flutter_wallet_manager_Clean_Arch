@@ -1,57 +1,41 @@
 import 'package:wallet_manager/domain/models/transaction.dart';
 
+import 'balance_type.dart';
+
 class BankAccount {
+  String id;
   List<BalanceType> balanceTypes;
   String name;
   String owner;
   String logo;
 
+//<editor-fold desc="Data Methods">
   BankAccount({
     required this.balanceTypes,
     required this.name,
     required this.owner,
     required this.logo,
-  });
-}
-
-// ignore: constant_identifier_names
-enum BalanceTypeEnum { CHECKING_ACCOUNT, SAVINGS_ACCOUNT, CREDIT_CARD }
-
-extension GetName on BalanceTypeEnum {
-  String get getName {
-    switch (this) {
-      case BalanceTypeEnum.CHECKING_ACCOUNT:
-        return 'Saldo em conta';
-      case BalanceTypeEnum.SAVINGS_ACCOUNT:
-        return 'Saldo em poupança';
-      case BalanceTypeEnum.CREDIT_CARD:
-        return 'Saldo em crédito';
-    }
-  }
-}
-
-class BalanceType {
-  String id;
-  String name;
-  String? balanceCloseDate;
-  String? balanceDueDate;
-  num balance = 0;
-  num? limit;
-  num? availableLimit;
-  BalanceTypeEnum balanceType;
-  String logo;
-  List<Transaction> transactions;
-
-  BalanceType({
     required this.id,
-    required this.name,
-    required this.balance,
-    required this.balanceType,
-    required this.logo,
-    required this.transactions,
-    required this.limit,
-    required this.availableLimit,
-    required this.balanceCloseDate,
-    required this.balanceDueDate,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'balanceTypes': balanceTypes.map((e) => e.toMap()).toList(),
+      'name': name,
+      'owner': owner,
+      'logo': logo,
+    };
+  }
+
+  factory BankAccount.fromMap(Map<String, dynamic> map) {
+    return BankAccount(
+      id: map['id'] as String,
+      balanceTypes: map['balanceTypes'] as List<BalanceType>,
+      name: map['name'] as String,
+      owner: map['owner'] as String,
+      logo: map['logo'] as String,
+    );
+  }
+
 }
+

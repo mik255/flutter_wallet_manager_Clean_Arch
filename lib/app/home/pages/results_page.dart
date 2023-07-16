@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/home/widgets/info_description.dart';
 import 'package:wallet_manager/domain/models/transaction.dart';
+import 'package:wallet_manager/domain/usecases/instances.dart';
 import '../../../domain/models/bank_account.dart';
 import '../../../main_stances.dart';
-import '../home_view_model.dart';
+import '../view_models/home_view_model.dart';
 import '../widgets/radial_pie_chart.dart';
 
 Color randomColor() {
@@ -93,7 +94,7 @@ class _ResultsPageState extends State<ResultsPage> {
           children: [
             _categoryResultsCardHeader(),
             FutureBuilder(
-                future: _computeResult(homeviewmodel.openFinanceService.getBankAccounts),
+                future: _computeResult(currentBankAccounts.toSet()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                      return const Center(

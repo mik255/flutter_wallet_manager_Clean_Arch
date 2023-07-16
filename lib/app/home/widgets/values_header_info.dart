@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet_manager/shared/extensions/current_formate.dart';
 
-import '../../../domain/models/financial_results_calculator.dart';
+import '../../../domain/usecases/calculators/financial_results_calculator.dart';
 
 class ValuesHeaderInfo extends StatefulWidget {
   const ValuesHeaderInfo({super.key, required this.financialResultsCalculator});

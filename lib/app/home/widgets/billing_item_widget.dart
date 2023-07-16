@@ -3,8 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallet_manager/shared/extensions/current_formate.dart';
 import 'package:wallet_manager/shared/extensions/formate_date.dart';
+import '../../../domain/models/balance_type.dart';
 import '../../../domain/models/bank_account.dart';
-import '../../../domain/models/financial_results_calculator.dart';
+import '../../../domain/usecases/calculators/financial_results_calculator.dart';
 import '../../../domain/models/transaction.dart';
 import '../../styles/container_decorators.dart';
 import '../../styles/text_styles.dart';
@@ -16,7 +17,7 @@ class BillingItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FinancialResultsCalculator financialResultsCalculator = FinancialResultsCalculator(allBanks: [bankAccount]);
+    FinancialResultsCalculator financialResultsCalculator = FinancialResultsCalculator();
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16.0),
       decoration: ShapeDecoration(

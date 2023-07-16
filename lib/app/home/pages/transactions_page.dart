@@ -2,9 +2,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/home/home_view_model.dart';
+import 'package:wallet_manager/app/home/view_models/home_view_model.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
-import '../../../domain/models/financial_results_calculator.dart';
+import 'package:wallet_manager/domain/usecases/instances.dart';
+import '../../../domain/usecases/calculators/financial_results_calculator.dart';
 import '../../../main_stances.dart';
 import '../widgets/info_description.dart';
 import '../widgets/input_and_output_card.dart';
@@ -23,16 +24,13 @@ class ComputeValues {
 }
 
 Future<ComputeValues> computeCalcuc(ComputeValues computeValues,HomeViewModel homeViewModel) async {
-  await Future.delayed(const Duration(milliseconds: 200));
-  computeValues.transactions.value = homeViewModel.openFinanceService.getBankAccounts
+  computeValues.transactions.value = currentBankAccounts
       .expand((element) =>
           element.balanceTypes.expand((element) => element.transactions))
       .map((e) => BillingItemTransactions(transaction: e))
       .toList();
 
-  computeValues.financialResultsCalculator = FinancialResultsCalculator(
-    allBanks: homeViewModel.openFinanceService.getBankAccounts.toList(),
-  );
+  computeValues.financialResultsCalculator = FinancialResultsCalculator();
   return computeValues;
 }
 
@@ -66,7 +64,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   ComputeValues(
                       transactions: ValueNotifier<List<BillingItemTransactions>>([]),
                       financialResultsCalculator:  FinancialResultsCalculator(
-                        allBanks: homeviewmodel.openFinanceService.getBankAccounts.toList(),
                       ),
                     allTransactions: [],
                   ),homeviewmodel),

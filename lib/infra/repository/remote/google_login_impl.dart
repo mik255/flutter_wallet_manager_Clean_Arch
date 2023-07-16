@@ -1,11 +1,11 @@
 import 'package:google_sign_in/google_sign_in.dart';
-
-
-
+import 'package:wallet_manager/domain/repositories/auth_repository.dart';
 import '../../../domain/models/user.dart';
-import 'auth_service_helper.dart';
+import '../../../domain/usecases/auth/auth_usecase.dart';
 
-class GoogleLoginServiceImpl implements AuthServiceHelper {
+class GoogleCredentials extends Credentials{}
+
+class GoogleLoginServiceImpl implements AuthRepository{
   GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: [
       'email',
@@ -14,11 +14,9 @@ class GoogleLoginServiceImpl implements AuthServiceHelper {
   );
   @override
   Future<User> singIn() async {
-
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
+      await googleUser!.authentication;
       return User(
           email: googleUser.email,
           photoUrl: googleUser.photoUrl,

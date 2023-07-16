@@ -1,5 +1,7 @@
-import 'package:wallet_manager/domain/models/bank_account.dart';
 import 'package:wallet_manager/domain/models/transaction.dart';
+import 'package:wallet_manager/domain/usecases/instances.dart';
+
+import '../../models/balance_type.dart';
 
 class FinancialResultsCalculator {
   num inputsBalance = 0;
@@ -8,9 +10,8 @@ class FinancialResultsCalculator {
   num savingsBalance = 0;
   num creditCardBalance = 0;
   List<Map<TransactionCategory, double>> percentageByCategories = [];
-  List<BankAccount> allBanks;
 
-  FinancialResultsCalculator({required this.allBanks}) {
+  FinancialResultsCalculator() {
     calculate();
   }
  clear() {
@@ -23,7 +24,7 @@ class FinancialResultsCalculator {
   }
   calculate() {
     clear();
-    percentageByCategories = allBanks
+    percentageByCategories = currentBankAccounts
         .expand((element) => element.balanceTypes)
         .expand((element) => element.transactions)
         .map((e) => e.category)
@@ -31,7 +32,7 @@ class FinancialResultsCalculator {
         .map((e) => {e: 0.0})
         .toList();
 
-    for (var element in allBanks) {
+    for (var element in currentBankAccounts) {
       element.balanceTypes.map((e) => e.transactions).forEach((element) {
         for (var transaction in element) {
           if (transaction.amount > 0 &&

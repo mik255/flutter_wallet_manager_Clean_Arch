@@ -1,35 +1,34 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import '../../../domain/models/user.dart';
-import '../../../infra/repository/local/abstract_preferences_helper.dart';
-import '../../../infra/services/auth/auth_service_helper.dart';
+import '../../../domain/repositories/auth_repository.dart';
+import '../../../domain/usecases/instances.dart';
 
-
-class UserViewModel {
-  User? user;
-  IPreferencesHelper helper;
+class AuthViewModel {
   ValueNotifier<String> message = ValueNotifier('');
+  AuthRepository authRepository;
 
-  UserViewModel({
-    required this.helper,
+  AuthViewModel({
+    required this.authRepository,
   });
 
-  Future<bool> login(AuthServiceHelper authServiceHelper) async {
+  Future<bool> singIn() async {
     try {
-      user = await authServiceHelper.singIn();
-      await helper.saveData('user', jsonEncode(user!.toMap()));
+      await authRepository.singIn();
       return true;
     } catch (e) {
       message.value = e.toString();
       return false;
     }
   }
-  Future<void> singOut(AuthServiceHelper authServiceHelper) async {
+
+  Future<void> singOut() async {
     try {
-      await authServiceHelper.singOut();
-      await helper.deleteData('user');
+      await authRepository.singOut();
     } catch (e) {
       message.value = e.toString();
     }
+  }
+  User getUser(){
+    return currentUser;
   }
 }

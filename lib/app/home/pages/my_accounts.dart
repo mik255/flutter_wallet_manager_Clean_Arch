@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet_manager/domain/usecases/instances.dart';
 
-import '../../../domain/models/financial_results_calculator.dart';
+import '../../../domain/usecases/calculators/financial_results_calculator.dart';
 import '../../../main_stances.dart';
 import '../../styles/text_styles.dart';
-import '../home_view_model.dart';
+import '../view_models/home_view_model.dart';
 import '../widgets/billing_item_widget.dart';
 import '../widgets/info_description.dart';
 import '../widgets/input_and_output_card.dart';
+import 'manual_debit_form_register.dart';
 
 class MyAccounts extends StatefulWidget {
   const MyAccounts({
@@ -61,128 +64,7 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                       children: [
                         InkWell(
                           onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      decoration: const ShapeDecoration(
-                                        color: Color(0xFFF5F6F9),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(16.0),
-                                              topRight: Radius.circular(16.0)),
-                                        ),
-                                        shadows: [
-                                          BoxShadow(
-                                            color: Color(0x3F000000),
-                                            blurRadius: 4,
-                                            offset: Offset(0, 4),
-                                            spreadRadius: 0,
-                                          )
-                                        ],
-                                      ),
-                                      child: FadeTransition(
-                                        opacity:
-                                            Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-                                          parent: AnimationController(
-                                            duration: const Duration(milliseconds: 1500),
-                                            vsync: this,
-                                          )..forward(),
-                                          curve: Curves.easeInOut,
-                                        )),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                InkWell(
-                                                  onTap: widget.onAddAccount,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(vertical: 16),
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.account_balance_outlined,
-                                                          color: Color(0xFF2D9CDB),
-                                                          size: 24,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 16,
-                                                        ),
-                                                        Text(
-                                                          'Instituição financeira',
-                                                          style: CustomTextStyles().smallSubtitle,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Divider(),
-                                                InkWell(
-                                                  onTap: () {},
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(vertical: 16),
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.more_time_rounded,
-                                                          color: Color(0xFF2D9CDB),
-                                                          size: 24,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 16,
-                                                        ),
-                                                        Text(
-                                                          'Conta Períodica',
-                                                          style: CustomTextStyles().smallSubtitle,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Divider(),
-                                                InkWell(
-                                                  onTap: () {},
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(vertical: 16),
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.calendar_month,
-                                                          color: Color(0xFF2D9CDB),
-                                                          size: 24,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 16,
-                                                        ),
-                                                        Text(
-                                                          'Conta Agendada',
-                                                          style: CustomTextStyles().smallSubtitle,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            _showModel();
                           },
                           child: Container(
                             decoration: const ShapeDecoration(
@@ -208,7 +90,7 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                                       .smallSubtitle
                                       .copyWith(color: Colors.white, fontSize: 14)),
                             ),
-                          ),
+                          )
                         ),
                       ],
                     ),
@@ -219,9 +101,10 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                 ],
               ),
               ...List.generate(
-                  homeviewmodel.openFinanceService.getBankAccounts.length,
+                  currentBankAccounts.length,
                   (index) => BillingItemWidget(
-                      bankAccount: homeviewmodel.openFinanceService.getBankAccounts.toList()[index])),
+                      bankAccount:
+                      currentBankAccounts[index])),
               Container(
                 height: 200,
               )
@@ -231,4 +114,144 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
       ),
     );
   }
+
+  _showModel() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              decoration: const ShapeDecoration(
+                color: Color(0xFFF5F6F9),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Color(0x3F000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 4),
+                    spreadRadius: 0,
+                  )
+                ],
+              ),
+              child: FadeTransition(
+                opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                  parent: AnimationController(
+                    duration: const Duration(milliseconds: 1500),
+                    vsync: this,
+                  )..forward(),
+                  curve: Curves.easeInOut,
+                )),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: AnimateList(
+                        interval: 200.ms,
+                        effects: [
+                          FadeEffect(duration: 150.ms),
+                          SlideEffect(
+                              delay: 300.ms,
+                              duration: 300.ms,
+                              curve: Curves.easeInOut,
+                              begin: const Offset(0, 0.5),
+                              end: Offset.zero)
+                        ],
+                        children: [
+                          InkWell(
+                            onTap: widget.onAddAccount,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.account_balance_outlined,
+                                    color: Color(0xFF2D9CDB),
+                                    size: 24,
+                                  ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  Text(
+                                    'Instituição financeira',
+                                    style: CustomTextStyles().smallSubtitle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>  ManualDebitFormRegister(),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.add_circle_outline_sharp,
+                                    color: Color(0xFF2D9CDB),
+                                    size: 24,
+                                  ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  Text(
+                                    'Dispesa manual',
+                                    style: CustomTextStyles().smallSubtitle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.calendar_month,
+                                    color: Color(0xFF2D9CDB),
+                                    size: 24,
+                                  ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  Text(
+                                    'Conta Agendada',
+                                    style: CustomTextStyles().smallSubtitle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

@@ -1,37 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/home/home_view_model.dart';
-import 'package:wallet_manager/infra/services/financial_data_helper/pluggly/pluggly_impl.dart';
+import 'package:wallet_manager/app/home/view_models/home_view_model.dart';
+import 'package:wallet_manager/domain/repositories/bank_repository.dart';
+import 'package:wallet_manager/infra/repository/remote/google_login_impl.dart';
+import 'app/home/view_models/manual_debit_form_register_view_model.dart';
 import 'app/login/login_build.dart';
 import 'app/shared/view_models/user_viewmodel.dart';
-import 'infra/repository/local/preferences_helper.dart';
+import 'infra/repository/local/local_storange_bank_repo_impl.dart';
+import 'infra/repository/local/shared_preferences_impl.dart';
 import 'main_stances.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MainStances.init();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late BankAccountRepository bankAccountRepository;
+
+  @override
+  void initState() {
+    bankAccountRepository = LocalBankAccountRepositoryImpl(
+      localStorageInterface: SharedPreferencesImpl(),
+    );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Aqui você pode adicionar todos os provedores que deseja fornecer
-        Provider<UserViewModel>(
-          create: (_) => UserViewModel(
-            helper: SharedPreferencesHelper(
-              MainStances.preferences,
-            )
+        Provider<AuthViewModel>(
+          create: (_) => AuthViewModel(
+            authRepository: GoogleLoginServiceImpl(),
           ),
         ),
         Provider<HomeViewModel>(
           create: (_) => HomeViewModel(
-            openFinanceService: PlugglyService(),
+            bankAccountRepository: bankAccountRepository,
+          ),
+        ),
+        Provider<ManualDebtFormRegisterViewModel>(
+          create: (_) => ManualDebtFormRegisterViewModel(
+            bankAccountRepository: bankAccountRepository,
           ),
         ),
       ],
@@ -40,15 +60,14 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-              primary: Colors.blue,
-              secondary: Colors.white,
-              seedColor: Colors.blue),
+            primary: Colors.blue,
+            secondary: Colors.white,
+            seedColor: Colors.blue,
+          ),
           useMaterial3: true,
         ),
-        home:  const LoginBuild(),
+        home: const LoginBuild(),
       ),
     );
   }
 }
-
-
