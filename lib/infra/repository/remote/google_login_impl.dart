@@ -1,9 +1,6 @@
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:wallet_manager/domain/repositories/auth_repository.dart';
-import '../../../domain/models/user.dart';
-import '../../../domain/usecases/auth/auth_usecase.dart';
-
-class GoogleCredentials extends Credentials{}
+import '../../../app/modules/account/domain/models/user.dart';
+import '../../../app/modules/account/domain/repositories/auth_repository.dart';
 
 class GoogleLoginServiceImpl implements AuthRepository{
   GoogleSignIn googleSignIn = GoogleSignIn(

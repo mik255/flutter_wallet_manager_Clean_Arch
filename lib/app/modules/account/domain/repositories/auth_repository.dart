@@ -1,7 +1,7 @@
-import '../usecases/auth/auth_usecase.dart';
-import '../models/user.dart';
+import '../../../../shared/models/user.dart';
 
 abstract class AuthRepository {
   Future<User> singIn();
+
   Future<void> singOut();
 }

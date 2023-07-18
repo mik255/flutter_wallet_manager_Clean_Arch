@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/home/pages/home_page.dart';
-import '../shared/view_models/user_viewmodel.dart';
+import '../../../shared/state/base_view_listener.dart';
+import '../domain/interactors/auth_view_model/auth_view_model.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -20,21 +20,38 @@ class LoginPage extends StatelessWidget {
         ),
       ),
       child: Scaffold(
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-          child: SizedBox(
-            height: 80,
-            child: SignInButton(
-              Buttons.Google,
-              shape: //circleBorder,
-                  RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+        bottomNavigationBar: Column(
+          children: [
+            SizedBox(
+              height:24,
+              child: StateBindListenerWithListenable(
+                states: [viewModel.state.errorListener],
+                child: Text(
+                  viewModel.state.getErrorValue(),
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
+                ),
               ),
-              onPressed: () async {
-                await viewModel.singIn().then((value) => value ? goTohome(context) : null);
-              },
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+              child: SizedBox(
+                height: 80,
+                child: SignInButton(
+                  Buttons.Google,
+                  shape: //circleBorder,
+                      RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  onPressed: () async {
+                    await viewModel.singIn();
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
         backgroundColor: Colors.transparent,
         body: const Padding(
@@ -66,17 +83,6 @@ class LoginPage extends StatelessWidget {
               Spacer(),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  void goTohome(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(
-          needLoadData: true,
         ),
       ),
     );

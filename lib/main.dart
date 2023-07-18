@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/home/view_models/home_view_model.dart';
+import 'package:wallet_manager/app/home/view_models/home_load_data.dart';
 import 'package:wallet_manager/domain/repositories/bank_repository.dart';
 import 'package:wallet_manager/infra/repository/remote/google_login_impl.dart';
 import 'app/home/view_models/manual_debit_form_register_view_model.dart';
@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     bankAccountRepository = LocalBankAccountRepositoryImpl(
-      localStorageInterface: SharedPreferencesImpl(),
+      localStorageInterface: SharedPreferencesImpl()..init(),
     );
 
     super.initState();

@@ -1,5 +1,3 @@
-import 'package:wallet_manager/domain/models/transaction.dart';
-
 import 'balance_type.dart';
 
 class BankAccount {

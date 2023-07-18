@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/home/pages/my_accounts.dart';
-import 'package:wallet_manager/app/home/pages/results_page.dart';
-import 'package:wallet_manager/app/home/pages/transactions_page.dart';
-import 'package:wallet_manager/app/home/widgets/perfil.dart';
+import 'package:wallet_manager/app/modules/home/pages/results_page.dart';
+import 'package:wallet_manager/app/modules/home/pages/transactions_page.dart';
+import 'package:wallet_manager/app/shared/state/base_view_listener.dart';
 import 'package:wallet_manager/domain/usecases/calculators/financial_results_calculator.dart';
-import '../../shared/widgets/date_rage_piker.dart';
-import '../view_models/home_view_model.dart';
+import '../../../shared/widgets/date_rage_piker.dart';
+import '../domain/interactors/home/home_load_data.dart';
+import '../widgets/perfil.dart';
 import '../widgets/values_header_info.dart';
+import 'my_accounts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.needLoadData});
@@ -23,14 +24,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _tabController;
   bool menuOpened = false;
   String currentItemId = '';
-  late HomeViewModel homeviewmodel;
+  late HomeLoadDataInteractor loadDataInteractor;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    homeviewmodel = context.read<HomeViewModel>();
-    homeviewmodel.loadInitialData();
+    loadDataInteractor = context.read<HomeLoadDataInteractor>();
+    loadDataInteractor.loadInitialData();
   }
 
   @override
@@ -45,26 +46,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     return SafeArea(
       child: Scaffold(
-        body: AnimatedBuilder(
-            animation: homeviewmodel.loading,
-            builder: (context, _) {
-              if (homeviewmodel.loading.value) {
+        body: StateBindListenerWithListenable(
+            states: [loadDataInteractor],
+            child: Builder( builder: (context) {
+              if (loadDataInteractor.loadingState) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              // if (showPlugglyConnect) {
-              //   return PluggyConnect(
-              //     connectToken: (homeviewmodel.openFinanceService as PlugglyService).accessToken,
-              //     onSuccess: (data) {
-              //       currentItemId = data['item']['id'];
-              //       homeviewmodel.getNewAccount(currentItemId);
-              //     },
-              //     onClose: () {
-              //       homeviewmodel.getNewAccount(currentItemId);
-              //     },
-              //   );
-              // }
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -73,7 +62,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       //  homeviewmodel.updateAllItem();
                       },
                     ),
-                    header(financialResultsCalculator),
+                    Header(
+                      financialResultsCalculator: financialResultsCalculator,
+                    )
                     TabBar(
                       controller: _tabController,
                       tabs: const [
@@ -111,44 +102,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               );
             }),
       ),
-    );
+    ));
 
   }
-  Widget header(FinancialResultsCalculator financialResultsCalculator){
-    return Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/home_background.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: ValuesHeaderInfo(
-                      financialResultsCalculator: financialResultsCalculator,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      DateRangePickerWidget(
-                        initialDate: homeviewmodel.dataRange,
-                        onDateSelected: (date) async {
-                          //homeviewmodel.updateTransactionsByRange(date);
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ));
-  }
+
 }

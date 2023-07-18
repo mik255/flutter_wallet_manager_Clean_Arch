@@ -1,4 +1,4 @@
-import 'package:wallet_manager/domain/models/transaction.dart';
+import 'package:wallet_manager/app/modules/home/domain/models/transaction.dart';
 
 enum BalanceTypeEnum { CHECKING_ACCOUNT, SAVINGS_ACCOUNT, CREDIT_CARD }
 

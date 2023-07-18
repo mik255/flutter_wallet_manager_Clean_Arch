@@ -25,7 +25,7 @@ class SharedPreferencesImpl extends LocalStorageInterface {
 
   @override
   Future<List<String>> getAll(String key) async {
-    return _preferences.getKeys().toList();
+    return  _preferences.getStringList(key)??[];
   }
 
   @override

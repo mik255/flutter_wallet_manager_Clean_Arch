@@ -3,8 +3,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../domain/models/transaction.dart';
-import '../../../domain/repositories/bank_repository.dart';
+import '../models/transaction.dart';
+import '../repositories/bank_repository.dart';
 
 class ManualDebtFormRegisterViewModel {
   ManualDebtFormRegisterViewModel({

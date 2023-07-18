@@ -6,7 +6,7 @@ import 'package:wallet_manager/domain/models/transaction.dart';
 import 'package:wallet_manager/domain/usecases/instances.dart';
 import '../../../domain/models/bank_account.dart';
 import '../../../main_stances.dart';
-import '../view_models/home_view_model.dart';
+import '../view_models/home_load_data.dart';
 import '../widgets/radial_pie_chart.dart';
 
 Color randomColor() {

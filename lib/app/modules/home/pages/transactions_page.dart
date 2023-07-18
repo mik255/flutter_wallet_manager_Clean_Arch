@@ -2,7 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/home/view_models/home_view_model.dart';
+import 'package:wallet_manager/app/home/view_models/home_load_data.dart';
 import 'package:wallet_manager/app/home/widgets/billing_item_widget.dart';
 import 'package:wallet_manager/domain/usecases/instances.dart';
 import '../../../domain/usecases/calculators/financial_results_calculator.dart';

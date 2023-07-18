@@ -6,7 +6,7 @@ import 'package:wallet_manager/domain/usecases/instances.dart';
 import '../../../domain/usecases/calculators/financial_results_calculator.dart';
 import '../../../main_stances.dart';
 import '../../styles/text_styles.dart';
-import '../view_models/home_view_model.dart';
+import '../view_models/home_load_data.dart';
 import '../widgets/billing_item_widget.dart';
 import '../widgets/info_description.dart';
 import '../widgets/input_and_output_card.dart';

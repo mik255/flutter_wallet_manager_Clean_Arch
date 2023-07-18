@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/view_models/user_viewmodel.dart';
 import '../../styles/container_decorators.dart';
-import '../view_models/home_view_model.dart';
+import '../view_models/home_load_data.dart';
 
 
 class PerfilWidget extends StatelessWidget {
