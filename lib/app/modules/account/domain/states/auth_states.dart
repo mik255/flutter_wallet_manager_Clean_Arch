@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import '../../../../shared/models/user.dart';
 
 abstract class AuthState {
@@ -12,5 +11,5 @@ abstract class AuthState {
 
   String getErrorValue();
 
-  Listenable get errorListener;
+  get errorListener;
 }

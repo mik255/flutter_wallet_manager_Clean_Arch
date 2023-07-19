@@ -35,5 +35,11 @@ class BankAccount {
     );
   }
 
+  void calculateResults() {
+    for (var balanceType in balanceTypes) {
+      balanceType.calculateResult();
+    }
+  }
+
 }
 

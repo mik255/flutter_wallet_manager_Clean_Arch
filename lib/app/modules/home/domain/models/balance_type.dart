@@ -53,4 +53,11 @@ class BalanceType {
       'balanceDueDate': balanceDueDate,
     };
   }
+
+  void calculateResult() {
+    balance = 0;
+    for (var transaction in transactions) {
+      balance += transaction.amount;
+    }
+  }
 }
