@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 import '../../../shared/state/base_view_listener.dart';
 import '../domain/interactors/auth_view_model/auth_view_model.dart';
 
@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthViewModel viewModel = Provider.of<AuthViewModel>(context);
+    AuthViewModel viewModel = GetIt.instance<AuthViewModel>();
 
     return Container(
       decoration: const BoxDecoration(
@@ -46,7 +46,11 @@ class LoginPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onPressed: () async {
-                    await viewModel.singIn();
+                   await viewModel.singIn().then((value){
+                      if(value){
+                        Navigator.pushNamed(context, '/home');
+                      }
+                    });
                   },
                 ),
               ),

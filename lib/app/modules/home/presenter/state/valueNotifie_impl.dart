@@ -1,22 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import '../../domain/state/home_view_model.dart';
 
-class HomeStateImpl extends ValueNotifier<HomeState> implements HomeState {
-  HomeStateImpl() : super(HomeLoadingState());
+class HomeBindImpl extends ValueNotifier<HomeState> implements HomeViewBinding {
+  HomeBindImpl() : super(HomeLoadingState());
 
   @override
-  void setState(HomeState state) {
-    value = state;
+  void setState(HomeState newState) {
+    value = newState;
   }
+  @override
+  HomeState get state => value;
 
-   @override
-   onListenerBuilder(
-     Function(HomeState state) builder,
+  @override
+  onBindListener(
+    Function() builder,
   ) {
-    return AnimatedBuilder(
-        animation: this,
-        builder: (context, _) {
-          return builder(value);
+    return ValueListenableBuilder(
+      valueListenable: this,
+        builder: (context, state,child) {
+          return builder();
         });
   }
+
 }

@@ -1,8 +1,11 @@
-import 'package:wallet_manager/app/modules/home/domain/models/transaction.dart';
-
 import '../models/bank_account.dart';
 
 abstract class BankAccountRepository {
+  Future<List<BankAccount>> getBankAccountList();
+
   saveBankAccount(BankAccount bankAccount);
-  Future<List<BankAccount>>  getBankAccounts();
+
+  Future<BankAccount> getBankAccount(String id);
+
+  Future<void> init();
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_manager/app/modules/home/domain/state/home_view_model.dart';
 import '../../../../styles/text_styles.dart';
@@ -8,12 +9,11 @@ import '../../domain/viewmodels/home_view_model.dart';
 import '../widgets/billing_item_widget.dart';
 import '../widgets/info_description.dart';
 import '../widgets/input_and_output_card.dart';
+import 'manual_debit_form_register.dart';
 
 
 class MyAccounts extends StatefulWidget {
-  const MyAccounts({
-    super.key,
-  });
+    MyAccounts({super.key});
 
   @override
   State<MyAccounts> createState() => _MyAccountsState();
@@ -22,7 +22,8 @@ class MyAccounts extends StatefulWidget {
 class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    HomeViewModel homeviewmodel = context.read<HomeViewModelImpl>();
+    HomeViewModel homeviewmodel = GetIt.I<HomeViewModelImpl>();
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
@@ -54,35 +55,34 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                     rightWidget: Row(
                       children: [
                         InkWell(
-                          onTap: () {
-                            _showModel();
-                          },
-                          child: Container(
-                            decoration: const ShapeDecoration(
-                              color: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
+                            onTap: () {
+                              _showModel();
+                            },
+                            child: Container(
+                              decoration: const ShapeDecoration(
+                                color: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
                                 ),
+                                shadows: [
+                                  BoxShadow(
+                                    color: Color(0x3F000000),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 4),
+                                    spreadRadius: 0,
+                                  )
+                                ],
                               ),
-                              shadows: [
-                                BoxShadow(
-                                  color: Color(0x3F000000),
-                                  blurRadius: 4,
-                                  offset: Offset(0, 4),
-                                  spreadRadius: 0,
-                                )
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                              child: Text('Adicionar',
-                                  style: CustomTextStyles()
-                                      .smallSubtitle
-                                      .copyWith(color: Colors.white, fontSize: 14)),
-                            ),
-                          )
-                        ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                                child: Text('Adicionar',
+                                    style: CustomTextStyles()
+                                        .smallSubtitle
+                                        .copyWith(color: Colors.white, fontSize: 14)),
+                              ),
+                            )),
                       ],
                     ),
                     title: 'Contas',
@@ -92,10 +92,10 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                 ],
               ),
               ...List.generate(
-                  (homeviewmodel.state as HomeLoadedState).bankAccounts!.length,
+                  (homeviewmodel.bind.state as HomeLoadedState).bankAccounts!.length,
                   (index) => BillingItemWidget(
-                      bankAccount:
-                      (homeviewmodel.state as HomeLoadedState).bankAccounts![index])),
+                        bankAccount: (homeviewmodel.bind.state as HomeLoadedState).bankAccounts![index],
+                      )),
               Container(
                 height: 200,
               )
@@ -158,7 +158,7 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                         ],
                         children: [
                           InkWell(
-                            onTap: (){},
+                            onTap: () {},
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               child: Row(
@@ -182,12 +182,12 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                           Divider(),
                           InkWell(
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) =>  ManualDebitFormRegister(),
-                              //   ),
-                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>  ManualDebitFormRegister(),
+                                ),
+                              );
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -244,5 +244,4 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
       },
     );
   }
-
 }

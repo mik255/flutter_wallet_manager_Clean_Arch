@@ -19,7 +19,7 @@ const String resultsTitle =
 
 
 class ResultsPage extends StatefulWidget {
-  const ResultsPage({super.key});
+    ResultsPage({super.key});
 
   @override
   State<ResultsPage> createState() => _ResultsPageState();
@@ -37,9 +37,9 @@ class _ResultsPageState extends State<ResultsPage> {
         child: Column(
           children: [
             _categoryResultsCardHeader(),
-            homeviewmodel.state.onListenerBuilder(
-                 (state) {
-                  if (state is HomeLoadingState) {
+            homeviewmodel.bind.onBindListener(
+                 () {
+                  if (homeviewmodel.bind.state is HomeLoadingState) {
                      return const Center(
                         child: Padding(
                           padding: EdgeInsets.all(16.0),

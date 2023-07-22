@@ -1,8 +1,9 @@
 import 'dart:math';
-
+import 'package:wallet_manager/app/modules/home/domain/models/balance_type.dart';
 import 'package:wallet_manager/app/modules/home/domain/models/bank_account.dart';
 import 'package:wallet_manager/app/modules/home/domain/models/category.dart';
 import 'package:wallet_manager/app/modules/home/domain/models/category_results.dart';
+import '../../../stateManager/bindHandler.dart';
 import '../models/transaction.dart';
 import '../repositories/bank_repository.dart';
 import '../state/home_view_model.dart';
@@ -11,26 +12,34 @@ import '../viewmodels/home_view_model.dart';
 class HomeViewModelImpl implements HomeViewModel {
   HomeViewModelImpl({
     required this.bankAccountRepository,
-    required this.state,
+    required this.bind,
   });
 
   @override
   final BankAccountRepository bankAccountRepository;
   @override
-  HomeState state;
-  final HomeLoadedState _homeLoadedState = HomeLoadedState();
+  ViewBindingBase<HomeState> bind;
+
+  final HomeLoadedState _homeLoadedState = HomeLoadedState(
+    bankAccounts: [],
+    results: Results(categories: []),
+  );
 
   @override
   loadInitialData() async {
-    state.setState(HomeLoadingState());
-    state.setState(_homeLoadedState.copyWith(
-      bankAccounts: await bankAccountRepository.getBankAccounts(),
+    bind.setState(HomeLoadingState());
+    await bankAccountRepository.init();
+    List<BankAccount> bankAccounts =
+        await bankAccountRepository.getBankAccountList();
+    bind.setState(
+        _homeLoadedState.copyWith(
+      bankAccounts: bankAccounts,
     ));
   }
 
   @override
   registerBankAccount(BankAccount bankAccount) async {
-    state.setState(HomeLoadingState());
+    bind.setState(HomeLoadingState());
     await bankAccountRepository.saveBankAccount(bankAccount);
     await loadInitialData();
   }
@@ -62,7 +71,7 @@ class HomeViewModelImpl implements HomeViewModel {
       }
     }
     Results results = Results(categories: categoryResults);
-    state.setState(_homeLoadedState.copyWith(
+    bind.setState(_homeLoadedState.copyWith(
       results: results,
     ));
   }

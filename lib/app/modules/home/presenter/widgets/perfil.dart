@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../../styles/container_decorators.dart';
-import '../../../account/domain/interactors/auth_view_model/auth_view_model.dart';
 import '../../../account/domain/states/auth_states.dart';
-import '../../domain/viewmodels/home_view_model.dart';
+
 
 
 
@@ -14,7 +12,6 @@ class PerfilWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthViewModel viewModel = Provider.of<AuthViewModel>(context);
     return  Container(
       color: const Color(0x42D9D9D9),
       height: 56,

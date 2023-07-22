@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
+import '../../domain/interactors/home_view_model_impl.dart';
 import '../../domain/state/home_view_model.dart';
 import '../../domain/viewmodels/home_view_model.dart';
 import '../widgets/billing_item_widget.dart';
@@ -9,18 +10,18 @@ import '../widgets/input_and_output_card.dart';
 TextEditingController _searchController = TextEditingController();
 
 class TransactionsPage extends StatelessWidget {
-  const TransactionsPage({super.key});
+    TransactionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var homeviewmodel = context.read<HomeViewModel>();
-    return homeviewmodel.state.onListenerBuilder(
-            (state) {
-          if (state is HomeLoadingState) {
+    HomeViewModel homeviewmodel = GetIt.instance<HomeViewModelImpl>();
+    return homeviewmodel.bind.onBindListener(
+            () {
+          if (homeviewmodel.bind.state is HomeLoadingState) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          var allTransactions = (homeviewmodel.state as HomeLoadedState).bankAccounts!
+          var allTransactions = (homeviewmodel.bind.state as HomeLoadedState).bankAccounts!
               .expand((element) => element.balanceTypes).expand((element) => element.transactions);
           return SingleChildScrollView(
             child: Wrap(

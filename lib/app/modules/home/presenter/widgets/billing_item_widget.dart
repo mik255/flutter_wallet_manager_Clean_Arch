@@ -181,7 +181,7 @@ class BillingItemWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  100.0.toCurrencyString(withSymbol: false),
+                                  e.balance.toCurrencyString(withSymbol: false),
                                   style: const TextStyle(
                                     color: Color(0xFF0C1425),
                                     fontSize: 14,

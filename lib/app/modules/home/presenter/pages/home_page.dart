@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/modules/home/domain/interactors/home_view_model_impl.dart';
+import 'package:get_it/get_it.dart';
 import 'package:wallet_manager/app/modules/home/presenter/pages/results_page.dart';
 import 'package:wallet_manager/app/modules/home/presenter/pages/transactions_page.dart';
+import '../../domain/interactors/home_view_model_impl.dart';
 import '../../domain/state/home_view_model.dart';
 import '../../domain/viewmodels/home_view_model.dart';
 import '../widgets/header.dart';
@@ -10,9 +10,7 @@ import '../widgets/perfil.dart';
 import 'my_accounts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.needLoadData});
-
-  final bool needLoadData;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,6 +23,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    GetIt.I<HomeViewModelImpl>().loadInitialData();
   }
 
   @override
@@ -35,10 +34,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    HomeViewModel homeviewmodel = context.read<HomeViewModelImpl>();
-    return SafeArea(child: Scaffold(
-        body: homeviewmodel.state.onListenerBuilder((state) {
-      if (state is HomeLoadingState) {
+    HomeViewModel homeviewmodel = GetIt.I<HomeViewModelImpl>();
+
+    return SafeArea(child: Scaffold(body: homeviewmodel.bind.onBindListener(() {
+      print(homeviewmodel.bind.state);
+      if (homeviewmodel.bind.state is HomeLoadingState) {
         return const Center(
           child: CircularProgressIndicator(),
         );
@@ -63,11 +63,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 16,
+                ),
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _tabController,
-                  children: const [
+                  children: [
                     MyAccounts(),
                     TransactionsPage(),
                     ResultsPage(),

@@ -4,10 +4,9 @@ import '../local_datasource.dart';
 
 class SharedPreferencesImpl extends LocalDataSource {
   late SharedPreferences _preferences;
-
   @override
   Future<void> init() async {
-    _preferences = await SharedPreferences.getInstance();
+      _preferences = await SharedPreferences.getInstance();
   }
 
   @override
@@ -19,14 +18,15 @@ class SharedPreferencesImpl extends LocalDataSource {
   Future<String> get(String key) async {
     try {
       return _preferences.getString(key)!;
-    } catch (e) {
+    } catch (e,_) {
+      print(_);
       throw Exception('Error on get data');
     }
   }
 
   @override
-  Future<List<String>> getAll(String key) async {
-    return  _preferences.getStringList(key)??[];
+  Future<List<String>> getList(String key) async {
+    return _preferences.getStringList(key)??[];
   }
 
   @override
@@ -38,5 +38,10 @@ class SharedPreferencesImpl extends LocalDataSource {
   Future<void> update(String key, String value) async {
     await delete(key);
     await _preferences.setString(key, value);
+  }
+
+  @override
+  Future<void> saveList(String key, List<String> value) async{
+    await _preferences.setStringList(key, value);
   }
 }

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet_manager/shared/extensions/current_formate.dart';
-import '../../domain/interactors/home_view_model_impl.dart';
-
 
 class InputAndOutputCard extends StatelessWidget {
   const InputAndOutputCard(
       {super.key,});
 
-
   @override
   Widget build(BuildContext context) {
-    var homeviewmodel = context.read<HomeViewModelImpl>();
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(

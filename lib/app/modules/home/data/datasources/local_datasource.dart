@@ -9,5 +9,6 @@ abstract class LocalDataSource {
 
   Future<void> update(String key, String value);
 
-  Future<List<String>> getAll(String key);
+  Future<List<String>> getList(String key);
+  Future<void> saveList(String key, List<String> value);
 }
