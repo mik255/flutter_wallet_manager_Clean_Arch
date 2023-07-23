@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import '../../domain/interactors/home_view_model_impl.dart';
 import '../../domain/state/home_view_model.dart';
-import '../../domain/viewmodels/home_view_model.dart';
+import '../state/valueNotifie_impl.dart';
 import '../widgets/billing_item_widget.dart';
 import '../widgets/info_description.dart';
 import '../widgets/input_and_output_card.dart';
@@ -14,14 +13,14 @@ class TransactionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeViewModel homeviewmodel = GetIt.instance<HomeViewModelImpl>();
-    return homeviewmodel.bind.onBindListener(
+    var homeBindImpl = GetIt.instance<HomeBindImpl>();
+    return homeBindImpl.onBindListener(
             () {
-          if (homeviewmodel.bind.state is HomeLoadingState) {
+          if (homeBindImpl.state is HomeLoadingState) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          var allTransactions = (homeviewmodel.bind.state as HomeLoadedState).bankAccounts!
+          var allTransactions = (homeBindImpl.state as HomeLoadedState).bankAccounts!
               .expand((element) => element.balanceTypes).expand((element) => element.transactions);
           return SingleChildScrollView(
             child: Wrap(

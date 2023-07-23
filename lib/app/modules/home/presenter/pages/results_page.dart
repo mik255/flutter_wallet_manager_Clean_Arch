@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 import 'package:wallet_manager/app/modules/home/domain/state/home_view_model.dart';
-import '../../domain/viewmodels/home_view_model.dart';
+import 'package:wallet_manager/app/modules/home/presenter/state/valueNotifie_impl.dart';
 import '../widgets/info_description.dart';
 
 Color randomColor() {
@@ -10,59 +10,54 @@ Color randomColor() {
   final int r = random.nextInt(255); // Intervalo de vermelho: 80-255
   final int g = random.nextInt(255); // Intervalo de verde: 80-255
   final int b = random.nextInt(255); // Intervalo de azul: 80-255
-  return Color.fromRGBO(
-      r, g, b, 0.6);
+  return Color.fromRGBO(r, g, b, 0.6);
 }
 
 const String resultsTitle =
     'Estes valores correspontem ao somatório de entrada ou saída de todas  as contas. Para retirar um item do somatório, basta clicar no mesmo.';
 
-
 class ResultsPage extends StatefulWidget {
-    ResultsPage({super.key});
+  ResultsPage({super.key});
 
   @override
   State<ResultsPage> createState() => _ResultsPageState();
 }
 
 class _ResultsPageState extends State<ResultsPage> {
-
-
   @override
   Widget build(BuildContext context) {
-    var homeviewmodel = context.read<HomeViewModel>();
+    var homeBindimpl = GetIt.I<HomeBindImpl>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SingleChildScrollView(
         child: Column(
           children: [
             _categoryResultsCardHeader(),
-            homeviewmodel.bind.onBindListener(
-                 () {
-                  if (homeviewmodel.bind.state is HomeLoadingState) {
-                     return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 16.0,
-                              ),
-                              Text('calculando...'),
-                            ],
-                          ),
-                        ));
-                  }
-
-                  return const Column(
+            homeBindimpl.onBindListener(() {
+              if (homeBindimpl.state is HomeLoadingState) {
+                return const Center(
+                    child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
                     children: [
-                     // _radialChart(),
                       SizedBox(
-                        height: 300,
-                      )
+                        height: 16.0,
+                      ),
+                      Text('calculando...'),
                     ],
-                  );
-                }),
+                  ),
+                ));
+              }
+
+              return const Column(
+                children: [
+                  // _radialChart(),
+                  SizedBox(
+                    height: 300,
+                  )
+                ],
+              );
+            }),
           ],
         ),
       ),
@@ -97,7 +92,7 @@ class _ResultsPageState extends State<ResultsPage> {
 //       },
 //     );
 //   }
- }
+}
 //
 // class SwitchWithText extends StatefulWidget {
 //   const SwitchWithText({

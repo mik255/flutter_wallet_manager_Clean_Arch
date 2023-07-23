@@ -1,15 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/modules/account/domain/states/auth_states.dart';
-
 import '../../../../shared/widgets/select_string_page.dart';
-import '../../domain/interactors/home_view_model_impl.dart';
-import '../../domain/models/bank_account.dart';
-import '../../domain/viewmodels/home_view_model.dart';
+import '../../domain/models/expense.dart';
+import '../../domain/repositories/expanse_repository.dart';
+import '../../domain/view_model_usecase/expense/register_expanse.dart';
+import '../state/valueNotifie_impl.dart';
 
 class ManualDebitFormRegister extends StatelessWidget {
   ManualDebitFormRegister({super.key});
@@ -23,25 +20,34 @@ class ManualDebitFormRegister extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeViewModel homeviewmodel = GetIt.I<HomeViewModelImpl>();
+    var homeBindImpl = GetIt.I<HomeBindImpl>();
+    var registerManualDebitViewModel = SaveExpanseViewModelUseCase(
+      GetIt.I<ExpanseRepository>(),
+      homeBindImpl,
+    );
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
-            onPressed: () {
-              var ok = homeviewmodel.registerBankAccount(
-                BankAccount(
-                  balanceTypes: [],
+            onPressed: () async{
+              await registerManualDebitViewModel(
+                Expense(
                   name: nameController.text,
-                  owner: AuthState.currentUser.name,
-                  logo: '',
-                  id: Random().nextInt(1000).toString(),
+                  value: double.parse(amountController.text),
+                  category: categoryController.text,
+                  date: DateTime.now().toIso8601String(),
+                  isPaid: false,
                 ),
               );
-              if (ok) {
-                Navigator.pop(context);
-              }
+              Fluttertoast.showToast(
+                msg: "Salvo com sucesso",
+                toastLength: Toast.LENGTH_SHORT, // Duração do Toast (SHORT ou LONG)
+                gravity: ToastGravity.BOTTOM, // Posição do Toast na tela (TOP, BOTTOM, CENTER)
+                backgroundColor: Colors.black54, // Cor de fundo do Toast
+                textColor: Colors.white, // Cor do texto do Toast
+                fontSize: 16.0, // Tamanho do texto do Toast
+              );
             },
             child: const Text('Salvar'),
           ),
@@ -54,7 +60,7 @@ class ManualDebitFormRegister extends StatelessWidget {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
             ),
-            homeviewmodel.bind.onBindListener(() {
+            homeBindImpl.onBindListener(() {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Form(
@@ -90,7 +96,7 @@ class ManualDebitFormRegister extends StatelessWidget {
                               context: context,
                               builder: (context) {
                                 return SelectString(
-                                  list: [
+                                  list: const [
                                     'Alimentação',
                                     'Educação',
                                     'Lazer',
@@ -111,7 +117,7 @@ class ManualDebitFormRegister extends StatelessWidget {
                               context: context,
                               builder: (context) {
                                 return SelectString(
-                                  list: [
+                                  list: const [
                                     'NuBank',
                                     'Banco do Brasil',
                                     'Caixa',
