@@ -1,0 +1,24 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  FLUTTER_VERSION: '3.10.5'
+  CLIENT_ID: $(secrets.CLIENT_ID)
+  CLIENT_SECRET: $(secrets.CLIENT_SECRET)
+
+steps:
+  - script: |
+      echo "Installing Flutter SDK..."
+      git clone https://github.com/flutter/flutter.git -b $FLUTTER_VERSION
+      export PATH="$PATH:`pwd`/flutter/bin"
+      flutter precache
+    displayName: 'Install Flutter SDK'
+
+  - script: flutter pub get
+    displayName: 'Flutter Pub Get'
+
