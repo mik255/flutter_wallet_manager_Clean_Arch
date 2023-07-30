@@ -8,7 +8,7 @@ import '../../../../styles/container_decorators.dart';
 import '../../../../styles/text_styles.dart';
 import '../../domain/models/balance_type.dart';
 import '../../domain/models/bank_account.dart';
-import '../../domain/models/transaction.dart';
+import '../../../transactions/domain/models/transaction.dart';
 
 class BillingItemWidget extends StatelessWidget {
   const BillingItemWidget({super.key, required this.bankAccount});
@@ -369,7 +369,7 @@ class BillingItemTransactions extends StatelessWidget {
                           ),
                         ),
                       Text(
-                        transaction.category.category,
+                        transaction.category.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

@@ -2,11 +2,11 @@ import 'package:wallet_manager/app/modules/home/data/datasources/bank_datasource
 import '../../../../../../../../core/data/http_client.dart';
 import '../../../../../domain/models/bank_account.dart';
 import '../../../../mappers/accountBank_mapper.dart';
-import '../../../local_datasource.dart';
+import '../../../../../../../core/data/datasources/local_datasource.dart';
 
 class PlugglyDatasource implements BankAccountDataSource {
   HttpClientApp httpClientApp;
-  LocalDataSource localDataSource;
+  LocalDTO localDataSource;
 
   PlugglyDatasource({
     required this.httpClientApp,

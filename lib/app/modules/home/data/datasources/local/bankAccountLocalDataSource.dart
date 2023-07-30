@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:wallet_manager/app/modules/home/data/datasources/local_datasource.dart';
+import 'package:wallet_manager/app/core/data/datasources/local_datasource.dart';
 import 'package:wallet_manager/app/modules/home/data/mappers/accountBank_mapper.dart';
 import 'package:wallet_manager/app/modules/home/domain/models/bank_account.dart';
 import '../bank_datasource.dart';
 
 class BankAccountLocalDataSource implements BankAccountDataSource {
-  final LocalDataSource localDataSource;
+  final LocalDTO localDataSource;
 
   BankAccountLocalDataSource({required this.localDataSource});
 

@@ -1,4 +1,4 @@
-import 'package:wallet_manager/app/modules/home/domain/models/transaction.dart';
+import 'package:wallet_manager/app/modules/transactions/domain/models/transaction.dart';
 
 class CategoryResults {
   CategoryResults({
@@ -11,7 +11,8 @@ class CategoryResults {
   int color;
   List<Transaction> transactions;
 
-  get totalValue {
+  num get totalValue {
     return transactions.map((e) => e.amount).reduce((a, b) => a + b);
   }
+
 }

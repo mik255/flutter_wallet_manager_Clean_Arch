@@ -35,10 +35,12 @@ class BankAccount {
     );
   }
 
-  void calculateResults() {
+  double calculateResults() {
+    double total = 0;
     for (var balanceType in balanceTypes) {
-      balanceType.calculateResult();
+      total+=balanceType.calculateResult();
     }
+    return total;
   }
 
 }
