@@ -49,6 +49,7 @@ dependencies:
   bloc: ^8.1.2
   get_it:
   fluttertoast:
+  rxdart:
 
 
 

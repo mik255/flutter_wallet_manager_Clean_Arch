@@ -1,4 +1,4 @@
-import 'package:wallet_manager/app/modules/home/domain/models/transaction.dart';
+import 'package:wallet_manager/app/modules/transactions/domain/models/transaction.dart';
 
 enum BalanceTypeEnum { CHECKING_ACCOUNT, SAVINGS_ACCOUNT, CREDIT_CARD }
 
@@ -54,10 +54,11 @@ class BalanceType {
     };
   }
 
-  void calculateResult() {
+  double calculateResult() {
     balance = 0;
     for (var transaction in transactions) {
       balance += transaction.amount;
     }
+    return balance.toDouble();
   }
 }

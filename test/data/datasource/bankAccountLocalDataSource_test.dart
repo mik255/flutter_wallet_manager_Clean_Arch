@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet_manager/app/modules/home/data/datasources/local/bankAccountLocalDataSource.dart';
-import 'package:wallet_manager/app/modules/home/data/datasources/local/shared_preferences_impl.dart';
+import 'package:wallet_manager/app/core/driver/shared_preferences_impl.dart';
 import 'package:wallet_manager/app/modules/home/domain/models/balance_type.dart';
 import 'package:wallet_manager/app/modules/home/domain/models/bank_account.dart';
-import 'package:wallet_manager/app/modules/home/domain/models/transaction.dart';
+import 'package:wallet_manager/app/modules/transactions/domain/models/transaction.dart';
 
 void main() {
   test('', () async {
@@ -30,7 +30,7 @@ void main() {
             transactions: [
               Transaction(
                   category: TransactionCategory(
-                    category: '',
+                    name: '',
                     icon: Icons.ac_unit,
                   ),
                   name: 'name',
