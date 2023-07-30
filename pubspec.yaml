@@ -48,6 +48,8 @@ dependencies:
   flutter_animate: ^4.2.0
   bloc: ^8.1.2
   get_it:
+  fluttertoast:
+  rxdart:
 
 
 

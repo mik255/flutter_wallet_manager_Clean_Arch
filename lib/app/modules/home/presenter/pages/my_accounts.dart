@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
-import 'package:wallet_manager/app/modules/home/domain/state/home_view_model.dart';
 import '../../../../styles/text_styles.dart';
-import '../../domain/interactors/home_view_model_impl.dart';
-import '../../domain/viewmodels/home_view_model.dart';
+import '../../domain/usecase/bank_account/get_banks_account.dart';
 import '../widgets/billing_item_widget.dart';
 import '../widgets/info_description.dart';
 import '../widgets/input_and_output_card.dart';
-import 'manual_debit_form_register.dart';
-
+import '../../../transactions/presenter/pages/manual_debit_form_register.dart';
 
 class MyAccounts extends StatefulWidget {
     MyAccounts({super.key});
@@ -22,7 +18,7 @@ class MyAccounts extends StatefulWidget {
 class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    HomeViewModel homeviewmodel = GetIt.I<HomeViewModelImpl>();
+    var getBankAccountListViewModelUseCase = GetIt.I<GetBankAccountListViewModelUseCase>();
 
     return Scaffold(
       body: Padding(
@@ -92,9 +88,9 @@ class _MyAccountsState extends State<MyAccounts> with TickerProviderStateMixin {
                 ],
               ),
               ...List.generate(
-                  (homeviewmodel.bind.state as HomeLoadedState).bankAccounts!.length,
+                  getBankAccountListViewModelUseCase.banksState.length,
                   (index) => BillingItemWidget(
-                        bankAccount: (homeviewmodel.bind.state as HomeLoadedState).bankAccounts![index],
+                        bankAccount: getBankAccountListViewModelUseCase.banksState[index],
                       )),
               Container(
                 height: 200,

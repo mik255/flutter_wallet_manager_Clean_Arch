@@ -1,4 +1,4 @@
-import 'package:wallet_manager/app/modules/home/data/mappers/transaction_mapper.dart';
+import 'package:wallet_manager/app/modules/transactions/data/mapper/transaction_mapper.dart';
 import 'package:wallet_manager/app/modules/home/domain/models/balance_type.dart';
 
 class BalanceTypesMapper {

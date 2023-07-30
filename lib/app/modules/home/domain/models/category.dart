@@ -1,5 +1,3 @@
-
-
 import 'category_results.dart';
 
 class Results {
@@ -8,7 +6,11 @@ class Results {
   Results({
     required this.categories,
   });
-  num get totalValue {
-    return categories.map((e) => e.totalValue).reduce((a, b) => a + b);
+
+  double totalValue = 0;
+
+  num calculate() {
+    if(categories.isEmpty) return 0;
+    return totalValue = categories.map((e) => e.totalValue).reduce((a, b) => a + b).toDouble();
   }
 }
